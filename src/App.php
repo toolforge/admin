@@ -135,8 +135,9 @@ class App extends AbstractApp {
 	protected function configureRoutes( \Slim\Slim $slim ) {
 		$slim->group( '/',
 			function () use ( $slim ) {
-				// Temporary redir while testing
-				App::redirect( $slim, '', 'oge-status', 'home' );
+				$slim->get( '', function () use ( $slim ) {
+					$slim->render( 'splash.html' );
+				} )->name( 'splash' );
 
 				$slim->get( 'oge-status', function () use ( $slim ) {
 					$page = new Pages\OgeStatus( $slim );
