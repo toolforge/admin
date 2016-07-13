@@ -66,7 +66,7 @@ class OgeStatus extends Controller {
 		}
 
 		$this->view->set( 'hosts', $hosts );
-		$this->render( 'status.html' );
+		$this->render( 'oge-status.html' );
 	}
 
 	protected static function safeGet( array $arr, $key, $default = '' ) {

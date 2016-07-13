@@ -131,12 +131,12 @@ class App extends AbstractApp {
 	protected function configureRoutes( \Slim\Slim $slim ) {
 		$slim->group( '/',
 			function () use ( $slim ) {
-				$slim->get( '', function () use ( $slim ) {
+				$slim->get( 'oge-status', function () use ( $slim ) {
 					$page = new \Tools\Admin\Pages\OgeStatus( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setQstat( $slim->qstat );
 					$page();
-				} )->name( 'status' );
+				} )->name( 'oge-status' );
 			}
 		); // end group '/'
 
