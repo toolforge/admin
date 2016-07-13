@@ -80,6 +80,10 @@ class App extends AbstractApp {
 		$container->singleton( 'qstat', function ( $c ) {
 			return new Qstat();
 		} );
+
+		$container->singleton( 'tools', function ( $c ) {
+			return new Tools();
+		} );
 	}
 
 	/**
@@ -131,8 +135,11 @@ class App extends AbstractApp {
 	protected function configureRoutes( \Slim\Slim $slim ) {
 		$slim->group( '/',
 			function () use ( $slim ) {
+				// Temporary redir while testing
+				App::redirect( $slim, '', 'oge-status', 'home' );
+
 				$slim->get( 'oge-status', function () use ( $slim ) {
-					$page = new \Tools\Admin\Pages\OgeStatus( $slim );
+					$page = new Pages\OgeStatus( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setQstat( $slim->qstat );
 					$page();
@@ -141,7 +148,10 @@ class App extends AbstractApp {
 		); // end group '/'
 
 		$slim->notFound( function () use ( $slim ) {
-			$slim->render( '404.html' );
+			$page = new Pages\NotFound( $slim );
+			$page->setI18nContext( $slim->i18nContext );
+			$page->setTools( $slim->tools );
+			$page();
 		} );
 	}
 }
