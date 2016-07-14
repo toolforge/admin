@@ -45,7 +45,7 @@ class Qstat {
 	public function getStatus() {
 		$data = [];
 		$client = new Client();
-		$response = $client->get( $uri );
+		$response = $client->get( $this->uri );
 		$body = $response->getBody();
 		$json = json_decode( $body, true );
 		if ( $json && array_key_exists( 'data', $json ) ) {
