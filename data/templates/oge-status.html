@@ -5,7 +5,7 @@
 <p>{{ 'tool-labs-desc'|message }}</p>
 <h2>{{ 'status-header'|message }}</h2>
 
-{% for hostname, host in hosts %}
+{% for hostname, host in data.attributes %}
 <div class="hostline" id="{{ hostname }}">
   <span class="hostname">{{ hostname }}</span>
   <b>{{ 'status-load'|message }}</b> {{ host.load }}%

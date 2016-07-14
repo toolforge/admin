@@ -36,8 +36,8 @@ class OgeStatus extends Controller {
 	}
 
 	protected function handleGet() {
-		$hosts = $this->qstat->getStatus();
-		$this->view->set( 'hosts', $hosts );
+		$data = $this->qstat->getStatus();
+		$this->view->set( 'data', $data );
 		$this->render( 'oge-status.html' );
 	}
 
