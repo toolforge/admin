@@ -144,15 +144,19 @@ class App extends AbstractApp {
 				$slim->get( '', function () use ( $slim ) {
 					$slim->render( 'splash.html' );
 				} )->name( 'splash' );
+			}
+		); // end group '/'
 
-				$slim->get( 'oge-status', function () use ( $slim ) {
+		$slim->group( '/oge',
+			function () use ( $slim ) {
+				$slim->get( 'status', function () use ( $slim ) {
 					$page = new Pages\OgeStatus( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setQstat( $slim->qstat );
 					$page();
 				} )->name( 'oge-status' );
 			}
-		); // end group '/'
+		); // end group '/oge'
 
 		$slim->notFound( function () use ( $slim ) {
 			$page = new Pages\NotFound( $slim );

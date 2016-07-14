@@ -38,7 +38,7 @@ class OgeStatus extends Controller {
 	protected function handleGet() {
 		$data = $this->qstat->getStatus();
 		$this->view->set( 'data', $data );
-		$this->render( 'oge-status.html' );
+		$this->render( 'oge/status.html' );
 	}
 
 	protected static function safeGet( array $arr, $key, $default = '' ) {
