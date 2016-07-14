@@ -147,7 +147,7 @@ class App extends AbstractApp {
 			}
 		); // end group '/'
 
-		$slim->group( '/oge',
+		$slim->group( '/oge/',
 			function () use ( $slim ) {
 				$slim->get( 'status', function () use ( $slim ) {
 					$page = new Pages\OgeStatus( $slim );
