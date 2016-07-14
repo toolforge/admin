@@ -31,11 +31,16 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureSlim( \Slim\Slim $slim ) {
+		$slim->config( [
+			'qstat.uri' => Config::getStr( 'QSTAT_URI',
+				'https://tools.wmflabs.org/gridengine-status'
+			),
+		] );
+
 		$slim->configureMode( 'production', function () use ( $slim ) {
 			$slim->config( [
 				'debug' => false,
 				'log.level' => Config::getStr( 'LOG_LEVEL', 'INFO' ),
-				'qstat.uri' => 'https://tools.wmflabs.org/gridengine-status',
 			] );
 
 			// Install a custom error handler
