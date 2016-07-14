@@ -3,8 +3,9 @@
 	"license": "GPL-3.0+",
 	"homepage": "https://tools.wmflabs.org/",
 	"require": {
-		"wikimedia/slimapp": "dev-master",
-		"php": ">=5.5.9"
+		"guzzlehttp/guzzle": "~6.0",
+		"php": ">=5.5.9",
+		"wikimedia/slimapp": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {

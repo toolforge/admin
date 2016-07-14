@@ -19,153 +19,44 @@
 
 namespace Tools\Admin;
 
-use Exception;
-use SimpleXMLElement;
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
 
 class Qstat {
-
-	const CMD_QSTAT = "/usr/bin/qstat -xml -j '*' | /bin/sed -e 's/JATASK:[^>]*/jatask/g'";
-	const CMD_QHOST = '/usr/bin/qhost -xml -j -F h_vmem';
+	/**
+	 * @var LoggerInterface $logger
+	 */
+	protected $logger;
 
 	/**
-	 * Get a list of jobs submitted to the grid.
-	 * @return array
+	 * @var string $uri
 	 */
-	public function getJobs() {
-		$jobs = [];
-		$xml = $this->execAndParse( self::CMD_QSTAT );
-		foreach ( $xml->djob_info->element as $xjob ) {
-			$tool = (string) $xjob->JB_owner;
-			if ( substr( $tool, 0, 6 ) === 'tools.' ) {
-				$tool = substr( $tool, 6 );
-			}
-			$job = [
-				'num' => (string) $xjob->JB_job_number,
-				'name' => (string) $xjob->JB_job_name,
-				'submit' => (string) $xjob->JB_submission_time,
-				'owner' => (string) $xjob->JB_owner,
-				'tool' => $tool,
-			];
-			if ( $xjob->JB_hard_queue_list ) {
-				$job['queue'] = (string) $xjob->JB_hard_queue_list->destin_ident_list->QR_name;
-			} else {
-				$job['queue'] = '(manual)';
-			}
-			foreach ( $xjob->JB_hard_resource_list->qstat_l_requests as $lreq ) {
-				if ( $lreq->CE_name === 'h_vmem' ) {
-					$job['h_vmem'] = (int) $lreq->CE_doubleval;
-				}
-			}
-			if ( $xjob->JB_ja_tasks->jatask &&
-				$xjob->JB_ja_tasks->jatask->JAT_scaled_usage_list
-			) {
-				foreach ( $xjob->JB_ja_tasks->jatask->JAT_scaled_usage_list->scaled as $usage ) {
-					$job[(string) $usage->UA_name] = (int) $usage->UA_value;
-				}
-			}
-			if ( $xjob->JB_ja_tasks->ulong_sublist &&
-				$xjob->JB_ja_tasks->ulong_sublist->JAT_scaled_usage_list
-			) {
-				foreach ( $xjob->JB_ja_tasks->ulong_sublist->JAT_scaled_usage_list->scaled as $usage ) {
-					$job[(string) $usage->UA_name] = (int) $usage->UA_value;
-				}
-			}
-			$jobs[$job['num']] = $job;
-		}
-		return $jobs;
+	protected $uri;
+
+	/**
+	 * @param string $uri OGE status endpoint
+	 * @param LoggerInterface $logger Log channel
+	 */
+	public function __construct( $uri, $logger = null ) {
+		$this->logger = $logger ?: new \Psr\Log\NullLogger();
+		$this->uri = $uri;
 	}
 
-	/**
-	 * Get a list of hosts available on the grid.
-	 * @return array
-	 */
-	public function getHosts() {
-		$hosts = [];
-		$xml = $this->execAndParse( self::CMD_QHOST );
-		foreach ( $xml->host as $xhost ) {
-			$parts = explode( '.', (string) $xhost->attributes()->name, 2 );
-			$hname = $parts[0];
-			if ( $hname !== 'global' ) {
-				$host = [
-					'name'   => $hname,
-					'h_vmem' => static::mmem( (string) $xhost->resourcevalue ) * 1024 * 1024,
-					'jobs'   => [],
-				];
-				foreach ( $xhost->hostvalue as $hv ) {
-					$host[(string) $hv->attributes()->name] = (string) $hv;
-				}
-				foreach ( $xhost->job as $xjob ) {
-					$jid = (int) $xjob->attributes()->name;
-					$job = [];
-					foreach ( $xjob->jobvalue as $jv ) {
-						$job[(string) $jv->attributes()->name] = (string) $jv;
-					}
-					$rawState = static::safeGet( $job, 'job_state' );
-					$job['state'] = $rawState;
-					if ( stristr( $rawState, 'R' ) !== false ) {
-						$job['state'] = 'Running';
-					}
-					if ( stristr( $rawState, 's' ) !== false ) {
-						$job['state'] = 'Suspended';
-					}
-					if ( stristr( $rawState, 'd' ) !== false ) {
-						$job['state'] = 'Deleting';
-					}
-					$job['host'] = $hname;
-					$host['jobs'][$jid] = $job;
-				}
-				ksort( $host['jobs'] );
-				$used = static::mmem( static::safeGet( $host, 'mem_used', '0M' ) );
-				$total = static::mmem( static::safeGet( $host, 'mem_total', '1M' ) );
-				$host['mem'] = $used / $total;
-				$hosts[$hname] = $host;
-			}
+	public function getStatus() {
+		$data = [];
+		$client = new Client();
+		$response = $client->get( $uri );
+		$body = $response->getBody();
+		$json = json_decode( $body, true );
+		if ( $json && array_key_exists( 'data', $json ) ) {
+			$data = $json['data'];
+		} else {
+			$this->logger->error( 'Error fetching OGE status data', [
+				'method' => __METHOD__,
+				'status' => $response->getStatusCode(),
+				'body' => $body,
+			] );
 		}
-		ksort( $hosts );
-		return $hosts;
-	}
-
-	/**
-	 * Execute a command and parse the result as XML.
-	 *
-	 * @param string $cmd
-	 * @return SimpleXMLElement
-	 * @throws Exception
-	 */
-	protected function execAndParse( $cmd ) {
-		$out = shell_exec( $cmd );
-		libxml_use_internal_errors();
-		libxml_clear_errors();
-		return new SimpleXMLElement( $out );
-	}
-
-	/**
-	 * Parse a human readable memory value and return an intger number of
-	 * megabytes that it represents.
-	 *
-	 * @param string $str
-	 * @return int
-	 */
-	protected static function mmem( $str ) {
-		$suffix = substr( $str, -1 );
-		if ( $suffix === 'M' ) {
-			return 0 + $str;
-		}
-		if ( $suffix === 'G' ) {
-			return 1024 * $str;
-		}
-		return -1;
-	}
-
-	/**
-	 * Safely get a value from an array.
-	 *
-	 * @param array $arr
-	 * @param mixed $key
-	 * @param mixed $default Default value to return if $key is not found
-	 * @return mixed
-	 */
-	protected static function safeGet( array $arr, $key, $default = '' ) {
-		return array_key_exists( $key, $arr ) ? $arr[$key] : $default;
+		return $data;
 	}
 }

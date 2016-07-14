@@ -35,6 +35,7 @@ class App extends AbstractApp {
 			$slim->config( [
 				'debug' => false,
 				'log.level' => Config::getStr( 'LOG_LEVEL', 'INFO' ),
+				'qstat.uri' => 'https://tools.wmflabs.org/gridengine-status',
 			] );
 
 			// Install a custom error handler
@@ -78,7 +79,7 @@ class App extends AbstractApp {
 		} );
 
 		$container->singleton( 'qstat', function ( $c ) {
-			return new Qstat();
+			return new Qstat( $c->settings['qstat.uri'] );
 		} );
 
 		$container->singleton( 'tools', function ( $c ) {
