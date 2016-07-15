@@ -41,7 +41,7 @@
       </td>
       <td class="tool-desc">
         {% if tool.toolinfo|length == 1 %}
-        {{ utils.describe_tool(tool.toolinfo[0]) }}
+        {{- utils.describe_tool(tool.toolinfo[0]) -}}
         {% else %}
         {% for info in tool.toolinfo %}
         <div class="subtool {% if loop.first %}first{% endif %}">
@@ -62,3 +62,5 @@
   </tbody>
 </table>
 {% endblock content %}
+
+{% block javascript %}{% include '_tablesort-js.html' %}{% endblock javascript %}

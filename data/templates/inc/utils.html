@@ -10,7 +10,7 @@ Describe a tool based on toolinfo data
 {% endmacro %}
 
 {% macro ucfirst( word ) %}
-{{ word[:1]|upper ~ word[1:] }}
+{{- word[:1]|upper ~ word[1:] -}}
 {% endmacro %}
 
 {##
@@ -19,7 +19,7 @@ ucfirst + convert spaces to underscores
 #}
 {% macro as_title( word ) %}
 {% import _self as utils %}
-{{ utils.ucfirst(word)|replace({' ': '_'}) }}
+{{- utils.ucfirst(word)|replace({' ': '_'}) -}}
 {% endmacro %}
 
 {##
@@ -32,7 +32,7 @@ wiki username was not found.
 {% if maintainer.gecos %}
 <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos)|url_encode }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
 {% else %}
-{{ utils.ucfirst(maintainer.name) }}
+{{- utils.ucfirst(maintainer.name) -}}
 {% endif %}
 {% endfor %}
 {% endmacro %}
