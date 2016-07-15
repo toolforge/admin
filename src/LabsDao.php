@@ -46,7 +46,7 @@ class LabsDao extends AbstractDao {
 			if ( $info === null ) {
 				$info = [ [ 'description' => $row['description'] ] ];
 			}
-			if ( !array_key_exists( 0 $info ) ) {
+			if ( !array_key_exists( 0, $info ) ) {
 				$info = [ $info ];
 			}
 			$row['toolinfo'] = $info;
