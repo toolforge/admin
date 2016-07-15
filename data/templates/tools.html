@@ -1,10 +1,5 @@
 {% extends "base.html" %}
-
-{% macro describe( info ) %}
-{{ info.description|purify }}
-{% if info.author %}<br><i>Author(s): {{ info.author|purify }}</i>{% endif %}
-{% if info.repository %}<br><a href="{{ info.repository }}">Source</a>{% endif %}
-{% endmacro %}
+{% import "inc/utils.html" as utils %}
 
 {% block content %}
 <h1>{{ 'tool-labs'|message }}</h1>
@@ -40,13 +35,13 @@
         {% for maintainer in tool.maintainers %}
         {% if users[maintainer] %}
         {% set wiki_user = users[maintainer].wikitech %}
-        <a href="https://wikitech.wikimedia.org/wiki/User:{{ wiki_user|replace({' ': '_'})|url_encode }}">{{ wiki_user|[:1]|upper ~ wiki_user[1:] }}</a>
+        <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(wiki_user)|url_encode }}">{{ utils.ucfirst(wiki_user) }}</a>
         {% endif %}
         {% endfor %}
       </td>
       <td class="tool-desc">
         {% if tool.toolinfo|length == 1 %}
-        {{ describe(tool.toolinfo[0]) }}
+        {{ utils.describe_tool(tool.toolinfo[0]) }}
         {% else %}
         {% for info in tool.toolinfo %}
         <div class="subtool {% if loop.first %}first{% endif %}">
@@ -57,7 +52,7 @@
             {{ info.title }}
             {% endif %}
           </span>
-          <span class="subtool-desc">{{ describe(info) }}</span>
+          <span class="subtool-desc">{{ utils.describe_tool(info) }}</span>
         </div>
       </td>
     </tr>

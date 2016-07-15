@@ -1,0 +1,25 @@
+{% macro describe( info ) %}
+{{ info.description|purify }}
+{% if info.author %}<br><i>Author(s): {{ info.author|purify }}</i>{% endif %}
+{% if info.repository %}<br><a href="{{ info.repository }}">Source</a>{% endif %}
+{% endmacro %}
+
+{% macro ucfirst( word ) %}
+{{ word[:1]|upper ~ word[1:] }}
+{% endmacro %}
+
+{% macro as_title( word ) %}
+{% import _self as utils %}
+{{ utils.ucfirst(word)|replace({' ': '_'}) }}
+{% endmacro %}
+
+{% macro printMaintainers( maintainers ) %}
+{% import _self as utils %}
+{% for maintainer in maintainers %}
+{% if maintainer.gecos %}
+<a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos)|url_encode }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
+{% else %}
+{{ utils.ucfirst(maintainer.name) }}
+{% endif %}
+{% endfor %}
+{% endmacro %}
