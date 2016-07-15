@@ -36,23 +36,25 @@ class Tools {
 	}
 
 	/**
-	* Get information about a tool based on the given URI.
+	* Get information about a tool
 	*
-	* @param string $uri
-	* @return array Tool name and list of maintainers. Tool name will be false
-	*   if URI does not correspond to a known tool
+	* @param string $tool
+	* @return array name, list of maintainers, homedir. Name will be false if
+	*     tool is not valid.
 	*/
-	public function getToolInfo( $uri ) {
+	public function getToolInfo( $tool ) {
 		$ret = [
-			'tool' => false,
-			'maintainers' => []
+			'name' => false,
+			'maintainers' => [],
+			'home' => null,
 		];
-		if ( preg_match( '@^/([^/]+)/@', $uri, $match ) ) {
-			$gr = posix_getgrnam( 'tools.' . $match[1] );
-			if ( $gr ) {
-				$ret['tool'] = $match[1];
-				$ret['maintainers'] = $this->getMemberInfo( $gr['members'] );
-			}
+		$shallName = "tools.{$tool}";
+		$g = posix_getgrnam( $shallName );
+		$u = posix_getpwnam( $shallName );
+		if ( $g && $u ) {
+			$ret['name'] = $name;
+			$ret['maintainers'] = $this->getMemberInfo( $g['members'] );
+			$ret['home'] = $u['dir'];
 		}
 		return $ret;
 	}
@@ -81,6 +83,7 @@ class Tools {
 	 * @return array
 	 */
 	public function getActiveWebservices() {
+		// TODO: add caching for 5-10 minutes in redis
 		$services = [];
 		// FIXME: $active_proxy = file_get_contents( '/etc/active-proxy' );
 		$active_proxy = 'tools-proxy-01';

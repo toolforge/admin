@@ -39,20 +39,36 @@ class LabsDao extends AbstractDao {
 		$tools = [];
 		$records = $this->fetchAll( 'SELECT * FROM tools ORDER BY name ASC' );
 		foreach ( $records as $idx => $row ) {
-			$info = null;
-			if ( $row['toolinfo'] != '' ) {
-				$info = json_decode( $row['toolinfo'], true );
-			}
-			if ( $info === null ) {
-				$info = [ [ 'description' => $row['description'] ] ];
-			}
-			if ( !array_key_exists( 0, $info ) ) {
-				$info = [ $info ];
-			}
-			$row['toolinfo'] = $info;
-			$row['maintainers'] = explode( ' ', $row['maintainers'] );
-			$tools[$row['name']] = $row;
+			$tools[$row['name']] = $this->toolsRowToArray( $row );
 		}
 		return $tools;
+	}
+
+	public function getTool( $name ) {
+		$row = $this->fetch(
+			'SELECT * FROM tools WHERE name = ?',
+			[ $name ]
+		);
+		if ( $row ) {
+			return $this->toolsRowToArray( $row );
+		} else {
+			return false;
+		}
+	}
+
+	protected function toolsRowToArray( $row ) {
+		$info = null;
+		if ( $row['toolinfo'] != '' ) {
+			$info = json_decode( $row['toolinfo'], true );
+		}
+		if ( $info === null ) {
+			$info = [ [ 'description' => $row['description'] ] ];
+		}
+		if ( !array_key_exists( 0, $info ) ) {
+			$info = [ $info ];
+		}
+		$row['toolinfo'] = $info;
+		$row['maintainers'] = explode( ' ', $row['maintainers'] );
+		return $row;
 	}
 }

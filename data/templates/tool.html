@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import "inc/utils.html" as utils %}
+
+{% block content %}
+<h1>{{ 'tool-labs'|message }}</h1>
+<p>{{ 'tool-labs-desc'|message }}</p>
+
+{% if tool.name %}
+<h2>Tool account: {{ tool.name }}</h2>
+<table class="tool-info" cols="2" width="95%">
+  <tr>
+    <th>Maintainers</th>
+    <td>{{ utils.printMaintainers( maintainers ) }}
+      <br><span class="mw-editsection">[<a href="https://wikitech.wikimedia.org/w/index.php?title=Special:NovaServiceGroup&action=managemembers&projectname=tools&servicegroupname=tools.{{ tool.name|url_encode }}">manage</a> maintainers]</span>
+    </td>
+  </tr>
+  <tr>
+    <th>Tool{% if tool.toolinfo|length > 1 %}s{% endif %}</th>
+    <td>
+      {% for info in tool.toolinfo %}
+      <div class="subtool {% if loop.first %}first{% endif %}">
+        <span class="subtool-name">
+          {% if info.url %}
+          <a href="{{ info.url }}">{{ info.title }}</a>
+          {% elseif tool.toolinfo|length == 1 and active %}
+          <a class="tool-web" href="/{{ tool.name }}/">{{ tool.name }}</a
+            {% else %}
+            {{ info.title }}
+            {% endif %}
+          </span>
+          <span class="subtool-desc">{{ utils.describe_tool(info) }}</span>
+        </div>
+        {% endfor %}
+    </td>
+  </tr>
+</table>
+{% else %}
+<p>No such tool?  Trying to guess, are you?</p>
+{% endif %}
+{% endblock content %}

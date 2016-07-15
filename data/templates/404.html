@@ -5,11 +5,11 @@
 <p>The URI you have requested, <code>{{ uri }}</code>, doesn't seem to actually exist.</p>
 {% if tool %}
 <h2>If you have reached this page from somewhere else...</h2>
-<p>This URI is managed by the <a href="/?tool={{ tool }}"><code>{{ tool }}</code></a> tool, maintained by {{ helpers.printMaintainers( maintainers ) }}.</p>
+<p>This URI is managed by the <a href="{{ urlFor('tool', ['name':tool]) }}"><code>{{ tool }}</code></a> tool, maintained by {{ utils.printMaintainers( maintainers ) }}.</p>
 <p>Perhaps its files are on vacation, or the link you've followed doesn't actually lead somewhere useful?</p>
 <p>You might want to looks at the <a href="{{ urlFor('tools') }}">list of tools</a> to find what you were looking for, or one of the links on the sidebar to the left. If you're pretty sure this shouldn't be an error, you may wish to notify the tool's maintainers (above) about the error and how you ended up here.</p>
 {% else %}
 <p>Perhaps the webserver has temporarily lost its mind, or the link you've followed doesn't actually lead somewhere useful?</p>
-<p>You might want to looks at the <a href="{{ urlFor('tools') }}">list of tools</a> to find what you were looking for, or one of the links on the sidebar to the left. If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="/?tool=admin">project administrators</a> about the error and how you ended up here.</p>
+<p>You might want to looks at the <a href="{{ urlFor('tools') }}">list of tools</a> to find what you were looking for, or one of the links on the sidebar to the left. If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', ['name':admin]) }}">project administrators</a> about the error and how you ended up here.</p>
 {% endif %}
 {% endblock content %}

@@ -195,6 +195,14 @@ class App extends AbstractApp {
 					$page->setLabsDao( $slim->labsDao );
 					$page();
 				} )->name( 'tools' );
+
+				$slim->get( 'tool/:name', function ( $name ) use ( $slim ) {
+					$page = new Pages\Tool( $slim );
+					$page->setI18nContext( $slim->i18nContext );
+					$page->setTools( $slim->tools );
+					$page->setLabsDao( $slim->labsDao );
+					$page();
+				} )->name( 'tool' );
 			}
 		); // end group '/'
 

@@ -22,13 +22,18 @@ namespace Tools\Admin\Pages;
 use Wikimedia\Slimapp\Controller;
 
 /**
- * 404 page
+ * Display details about a tool
  */
-class NotFound extends Controller {
+class Tool extends Controller {
 	/**
 	 * @var \Tools\Admin\Tools $tools
 	 */
 	protected $tools;
+
+	/**
+	 * @var \Tools\Admin\LabsDao $labsDao
+	 */
+	protected $labsDao;
 
 	/**
 	 * @param \Tools\Admin\Tools $tools
@@ -37,21 +42,27 @@ class NotFound extends Controller {
 		$this->tools = $tools;
 	}
 
-	protected function handleGet() {
-		$env = \Slim\Environment::getInstance();
-		$uri = $env['HTTP_X_ORIGINAL_URI'];
-		if ( preg_match( '@^/([^/]+)/@', $uri, $match ) ) {
-			$info = $this->tools->getToolInfo( $match[1] );
-		} else {
-			$info = [
-				'name' => false,
-				'maintainers' => []
-			];
+	/**
+	 * @param \Tools\Admin\LabsDao $dao
+	 */
+	public function setLabsDao( $dao ) {
+		$this->labsDao = $dao;
+	}
+
+	protected function handleGet( $name ) {
+		$tool = $this->labsDao->getTool( $name );
+		$active = false;
+		$maintainers = null;
+
+		if ( $tool ) {
+			$services = $this->tools->getActiveWebservices();
+			$active = isset( $services[$name] );
+			$maintainers = $this->tools->getToolInfo( $name )['maintainers'];
 		}
 
-		$this->view->set( 'uri', $uri );
-		$this->view->set( 'name', $info['tool'] );
-		$this->view->set( 'maintainers', $info['maintainers'] );
-		$this->render( '404.html' );
+		$this->view->set( 'tool', $tool );
+		$this->view->set( 'active', $active );
+		$this->view->set( 'maintainers', $maintainers );
+		$this->render( 'tools.html' );
 	}
 }
