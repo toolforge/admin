@@ -201,7 +201,7 @@ class App extends AbstractApp {
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setTools( $slim->tools );
 					$page->setLabsDao( $slim->labsDao );
-					$page();
+					$page( $name );
 				} )->name( 'tool' );
 			}
 		); // end group '/'
