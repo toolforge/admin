@@ -31,10 +31,19 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureSlim( \Slim\Slim $slim ) {
+		// TODO: make this optional?
+		$mycnf_file = Config::getStr( 'MY_CNF', '../replica.my.cnf' );
+		$mycnf = parse_ini_file( $mycnf_file );
+
 		$slim->config( [
 			'qstat.uri' => Config::getStr( 'QSTAT_URI',
 				'https://tools.wmflabs.org/gridengine-status'
 			),
+			'db.dsn' => Config::getStr( 'DB_DSN',
+				'mysql:host=tools.labsdb;dbname=toollabs_p'
+			),
+			'db.user' => Config::getStr( 'DB_USER', $mycnf['user'] ),
+			'db.pass' => Config::getStr( 'DB_PASS', $mycnf['password'] ),
 		] );
 
 		$slim->configureMode( 'production', function () use ( $slim ) {
@@ -84,11 +93,43 @@ class App extends AbstractApp {
 		} );
 
 		$container->singleton( 'qstat', function ( $c ) {
-			return new Qstat( $c->settings['qstat.uri'] );
+			return new Qstat( $c->settings['qstat.uri'], $c->log );
 		} );
 
 		$container->singleton( 'tools', function ( $c ) {
-			return new Tools();
+			return new Tools( $c->log );
+		} );
+
+		$container->singleton( 'purifierConfig', function ( $c ) {
+			$config = \HTMLPurifier_Config::createDefault();
+			$config->set( 'HTML.Doctype', 'HTML 4.01 Transitional' );
+			$config->set( 'URI.Base', 'https://tools.wmflabs.org' );
+			$config->set( 'URI.MakeAbsolute', true );
+			$config->set( 'URI.DisableExternalResources', true );
+			$config->set( 'CSS.ForbiddenProperties', [
+				'margin' => true,
+				'margin-top' => true,
+				'margin-right' => true,
+				'margin-bottom' => true,
+				'margin-left' => true,
+				'padding' => true,
+				'padding-top' => true,
+				'padding-right' => true,
+				'padding-bottom' => true,
+				'padding-left' => true
+			] );
+		} );
+
+		$container->singleton( 'purifier', function ( $c ) {
+			return new \HTMLPurifier( $c->purifierConfig );
+		} );
+
+		$container->singleton( 'labsDao', function ( $c ) {
+			return new Dao\LabsDao(
+				$c->settings['db.dsn'],
+				$c->settings['db.user'], $c->settings['db.pass'],
+				$c->log
+			);
 		} );
 	}
 
@@ -112,6 +153,7 @@ class App extends AbstractApp {
 			new \Slim\Views\TwigExtension(),
 			new \Wikimedia\SimpleI18n\TwigExtension( $this->slim->i18nContext ),
 			new HumanFilters(),
+			new HtmlPurifierExtension( $this->slim->container ),
 			new \Twig_Extension_Debug(),
 		];
 
@@ -144,6 +186,14 @@ class App extends AbstractApp {
 				$slim->get( '', function () use ( $slim ) {
 					$slim->render( 'splash.html' );
 				} )->name( 'splash' );
+
+				$slim->get( 'tools', function () use ( $slim ) {
+					$page = new Pages\Tools( $slim );
+					$page->setI18nContext( $slim->i18nContext );
+					$page->setTools( $slim->tools );
+					$page->setLabsDao( $slim->labsDao );
+					$page();
+				} )->name( 'tools' );
 			}
 		); // end group '/'
 

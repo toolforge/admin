@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% macro describe( info ) %}
+{{ info.description|purify }}
+{% if info.author %}<br><i>Author(s): {{ info.author|purify }}</i>{% endif %}
+{% if info.repository %}<br><a href="{{ info.repository }}">Source</a>{% endif %}
+{% endmacro %}
+
+{% block content %}
+<h1>{{ 'tool-labs'|message }}</h1>
+<p>{{ 'tool-labs-desc'|message }}</p>
+<h2>{{ 'tools-header'|message }}</h2>
+
+<table id="thebigtable" class="tablesorter">
+  <thead>
+    <tr>
+      <th>Tool</th>
+      <th>Maintainers</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tool in tools %}
+    <tr class="tool" id="toollist-{{ tool.name }}">
+      <td class="tool-name">
+        {% if tool.toolinfo|length == 1 %}
+        {% if tool.toolinfo[0].url %}
+        <a class="tool-web" href="{{ tool.toolinfo.url }}">{{ tool.name }}</a>
+        {% elseif tool in active %}
+        <a class="tool-web" href="/{{ tool.name }}/">{{ tool.name }}</a>
+        {% else %}
+        {{ tool.name }}
+        {% endif %}
+        {% else %}
+        {{ tool.name }}
+        {% endif %}
+        <span class="mw-editsection">[<a href="https://wikitech.wikimedia.org/w/index.php?title=Special:NovaServiceGroup&action=managemembers&projectname=tools&servicegroupname=tools.{{ tool.name|url_encode }}">manage</a> maintainers]</span>
+      </td>
+      <td class="tool-maintainers">
+        {% for maintainer in tool.maintainers %}
+        {% if users[maintainer] %}
+        {% set wiki_user = users[maintainer].wikitech %}
+        <a href="https://wikitech.wikimedia.org/wiki/User:{{ wiki_user|replace({' ': '_'})|url_encode }}">{{ wiki_user|[:1]|upper ~ wiki_user[1:] }}</a>
+        {% endif %}
+        {% endfor %}
+      </td>
+      <td class="tool-desc">
+        {% if tool.toolinfo|length == 1 %}
+        {{ describe(tool.toolinfo[0]) }}
+        {% else %}
+        {% for info in tool.toolinfo %}
+        <div class="subtool {% if loop.first %}first{% endif %}">
+          <span class="subtool-name">
+            {% if info.url %}
+            <a href="{{ info.url }}">{{ info.title }}</a>
+            {% else %}
+            {{ info.title }}
+            {% endif %}
+          </span>
+          <span class="subtool-desc">{{ describe(info) }}</span>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% block endcontent %}

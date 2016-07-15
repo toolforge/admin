@@ -22,22 +22,41 @@ namespace Tools\Admin\Pages;
 use Wikimedia\Slimapp\Controller;
 
 /**
- * Display (Oracle|Open)GridEngine status information
+ * Display list of tools
  */
-class OgeStatus extends Controller {
+class Tools extends Controller {
+	/**
+	 * @var \Tools\Admin\Tools $tools
+	 */
+	protected $tools;
 
 	/**
-	 * @var Qstat
+	 * @var \Tools\Admin\LabsDao $labsDao
 	 */
-	protected $qstat;
+	protected $labsDao;
 
-	public function setQstat( $qstat ) {
-		$this->qstat = $qstat;
+	/**
+	 * @param \Tools\Admin\Tools $tools
+	 */
+	public function setTools( $tools ) {
+		$this->tools = $tools;
+	}
+
+	/**
+	 * @param \Tools\Admin\LabsDao $dao
+	 */
+	public function setLabsDao( $dao ) {
+		$this->labsDao = $dao;
 	}
 
 	protected function handleGet() {
-		$data = $this->qstat->getStatus();
-		$this->view->set( 'data', $data );
-		$this->render( 'oge/status.html' );
+		$active = $this->tools->getActiveWebservices();
+		$users = $this->labsDao->getAllUsers();
+		$tools = $this->LabsDao->getAllTools();
+
+		$this->view->set( 'active', $active );
+		$this->view->set( 'users', $users );
+		$this->view->set( 'tools', $tools );
+		$this->render( 'tools.html' );
 	}
 }

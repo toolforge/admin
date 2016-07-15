@@ -1,7 +1,7 @@
 {% macro printMaintainers( maintainers ) %}
 {% for maintainer in maintainers %}
 {% if maintainer.gecos %}
-<a href="https://wikitech.wikimedia.org/wiki/User:{{ maintainer.gecos|replace({' ': '_'}) }}">{{ maintainer.gecos[:1]|upper ~ maintainer.gecos[1:] }}</a>
+<a href="https://wikitech.wikimedia.org/wiki/User:{{ maintainer.gecos|replace({' ': '_'})|url_encode }}">{{ maintainer.gecos[:1]|upper ~ maintainer.gecos[1:] }}</a>
 {% else %}
 {{ maintainer.name[:1]|upper ~ maintainer.name[1:] }}
 {% endif %}

@@ -28,5 +28,6 @@
 	"status-vmem": "VMEM",
 	"tool-labs": "Wikimedia Tool Labs",
 	"tool-labs-desc": "This is the web server for the Tool Labs project, the home of community-maintained external tools supporting Wikimedia projects and their users.",
+	"tools-header": "Hosted tools",
 	"zzzzz": "zzzzz"
 }

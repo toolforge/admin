@@ -19,7 +19,22 @@
 
 namespace Tools\Admin;
 
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
+
 class Tools {
+	/**
+	 * @var LoggerInterface $logger
+	 */
+	protected $logger;
+
+	/**
+	 * @param LoggerInterface $logger Log channel
+	 */
+	public function __construct( $logger = null ) {
+		$this->logger = $logger ?: new \Psr\Log\NullLogger();
+	}
+
 	/**
 	* Get information about a tool based on the given URI.
 	*
@@ -42,7 +57,13 @@ class Tools {
 		return $ret;
 	}
 
-	protected function getMemberInfo( $members ) {
+	/**
+	 * Get /etc/passwd info on a list of users.
+	 * @param array $members
+	 * @return array List of posix_getpwnam() data or ['name'=>...] for
+	 *     unknown accounts
+	 */
+	protected function getMemberInfo( array $members ) {
 		$ret = [];
 		foreach ( $members as $member ) {
 			$pwnam = posix_getpwnam( $member );
@@ -53,5 +74,39 @@ class Tools {
 			}
 		}
 		return $ret;
+	}
+
+	/**
+	 * Get list of currently active webservices.
+	 * @return array
+	 */
+	public function getActiveWebservices() {
+		$services = [];
+		// FIXME: $active_proxy = file_get_contents( '/etc/active-proxy' );
+		$active_proxy = 'tools-proxy-01';
+		$proxy_uri = "http://{$active_proxy}:8081/list";
+
+		$client = new Client();
+		$response = $client->get( $proxy_uri );
+		$body = $response->getBody();
+		$json = json_decode( $body, true );
+		if ( $json ) {
+			$proxies = json_decode( $body, true );
+			foreach ( $proxies as $key => $value ) {
+				if (
+					array_key_exists( 'status', $value ) &&
+					$value['status'] == 'active'
+				) {
+					$services[$key] = 1;
+				}
+			}
+		} else {
+			$this->logger->error( 'Error fetching webproxy status data', [
+				'method' => __METHOD__,
+				'status' => $response->getStatusCode(),
+				'body' => $body,
+			] );
+		}
+		return $services;
 	}
 }

@@ -30,5 +30,6 @@
 	"status-vmem": "Table heading: job virtual memory usage",
 	"tool-labs": "Site heading",
 	"tool-labs-desc": "Site description",
+	"tools-header": "Heading for tools page",
 	"zzzzz": "unused message stuck at the bottom of the file.\n{{Identical|zzzzz}}"
 }
