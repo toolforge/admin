@@ -32,7 +32,8 @@ class App extends AbstractApp {
 	 */
 	protected function configureSlim( \Slim\Slim $slim ) {
 		// TODO: make this optional?
-		$mycnf_file = Config::getStr( 'MY_CNF', '../replica.my.cnf' );
+		$mycnf_file = Config::getStr( 'MY_CNF',
+			APP_ROOT . '/../replica.my.cnf' );
 		$mycnf = parse_ini_file( $mycnf_file );
 
 		$slim->config( [
@@ -125,7 +126,7 @@ class App extends AbstractApp {
 		} );
 
 		$container->singleton( 'labsDao', function ( $c ) {
-			return new Dao\LabsDao(
+			return new LabsDao(
 				$c->settings['db.dsn'],
 				$c->settings['db.user'], $c->settings['db.pass'],
 				$c->log
