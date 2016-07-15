@@ -63,6 +63,6 @@ class Tool extends Controller {
 		$this->view->set( 'tool', $tool );
 		$this->view->set( 'active', $active );
 		$this->view->set( 'maintainers', $maintainers );
-		$this->render( 'tools.html' );
+		$this->render( 'tool.html' );
 	}
 }
