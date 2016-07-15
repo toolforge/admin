@@ -19,9 +19,10 @@
     <tr class="tool" id="toollist-{{ tool.name }}">
       <td class="tool-name">
         {% if tool.toolinfo|length == 1 %}
-        {% if tool.toolinfo[0].url %}
-        <a class="tool-web" href="{{ tool.toolinfo.url }}">{{ tool.name }}</a>
-        {% elseif tool in active %}
+        {% set info = tool.toolinfo[0] %}
+        {% if info.url %}
+        <a class="tool-web" href="{{ info.url }}">{{ tool.name }}</a>
+        {% elseif active[tool.name] %}
         <a class="tool-web" href="/{{ tool.name }}/">{{ tool.name }}</a>
         {% else %}
         {{ tool.name }}
