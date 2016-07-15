@@ -1,4 +1,9 @@
-{% macro describe( info ) %}
+
+{##
+Describe a tool based on toolinfo data
+@param info toolinfo
+#}
+{% macro describe_tool( info ) %}
 {{ info.description|purify }}
 {% if info.author %}<br><i>Author(s): {{ info.author|purify }}</i>{% endif %}
 {% if info.repository %}<br><a href="{{ info.repository }}">Source</a>{% endif %}
@@ -8,11 +13,19 @@
 {{ word[:1]|upper ~ word[1:] }}
 {% endmacro %}
 
+{##
+Convert a string to a likely wiki title.
+ucfirst + convert spaces to underscores
+#}
 {% macro as_title( word ) %}
 {% import _self as utils %}
 {{ utils.ucfirst(word)|replace({' ': '_'}) }}
 {% endmacro %}
 
+{##
+Print a list of maintainer data as links to user wiki pages or shell names if
+wiki username was not found.
+#}
 {% macro printMaintainers( maintainers ) %}
 {% import _self as utils %}
 {% for maintainer in maintainers %}
