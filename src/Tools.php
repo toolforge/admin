@@ -52,7 +52,7 @@ class Tools {
 		$g = posix_getgrnam( $shallName );
 		$u = posix_getpwnam( $shallName );
 		if ( $g && $u ) {
-			$ret['name'] = $name;
+			$ret['name'] = $tool;
 			$ret['maintainers'] = $this->getMemberInfo( $g['members'] );
 			$ret['home'] = $u['dir'];
 		}
