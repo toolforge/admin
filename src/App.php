@@ -45,6 +45,9 @@ class App extends AbstractApp {
 			),
 			'db.user' => Config::getStr( 'DB_USER', $mycnf['user'] ),
 			'db.pass' => Config::getStr( 'DB_PASS', $mycnf['password'] ),
+			'wiki.base' => Config::getStr( 'WIKI_BASE',
+				'https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/'
+			),
 		] );
 
 		$slim->configureMode( 'production', function () use ( $slim ) {
@@ -203,6 +206,12 @@ class App extends AbstractApp {
 					$page->setLabsDao( $slim->labsDao );
 					$page( $name );
 				} )->name( 'tool' );
+
+				$slim->get( 'wiki/:name', function ( $name ) use ( $slim ) {
+					$page = new Pages\Redirect( $slim );
+					$page->setBaseUrl( $slim->config( 'wiki.base' ) );
+					$page( $name );
+				} )->name( 'wiki' );
 			}
 		); // end group '/'
 

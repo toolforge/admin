@@ -23,12 +23,12 @@
           <ul>
             <li><a href="{{ urlFor('tools') }}">{{ 'nav-tools'|message }}</a></li>
             <li><a href="{{ urlFor('oge-status') }}">{{ 'nav-status'|message }}</a></li>
-            <li><a href="/?Privacy">{{ 'nav-privacy-policy'|message }}</a></li>
+            <li><a href="{{ urlFor('wiki', {'name': 'Privacy'}) }}">{{ 'nav-privacy-policy'|message }}</a></li>
           </ul>
           <em>{{ 'nav-maintainers'|message }}</em>
           <ul>
-            <li><a href="/?Help">{{ 'nav-help'|message }}</a></li>
-            <li><a href="/?Rules">{{ 'nav-rules'|message }}</a></li>
+            <li><a href="{{ urlFor('wiki', {'name': 'Help'}) }}">{{ 'nav-help'|message }}</a></li>
+            <li><a href="{{ urlFor('wiki', {'name': 'Rules'}) }}">{{ 'nav-rules'|message }}</a></li>
           </ul>
         </div>
       </div>
