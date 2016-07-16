@@ -22,9 +22,9 @@ namespace Tools\Admin\Pages;
 use Wikimedia\Slimapp\Controller;
 
 /**
- * 404 page
+ * Error page
  */
-class NotFound extends Controller {
+class Error extends Controller {
 	/**
 	 * @var \Tools\Admin\Tools $tools
 	 */
@@ -37,7 +37,7 @@ class NotFound extends Controller {
 		$this->tools = $tools;
 	}
 
-	protected function handleGet() {
+	protected function handleGet( $errorCode ) {
 		$env = \Slim\Environment::getInstance();
 		$uri = $env['HTTP_X_ORIGINAL_URI'];
 		if ( preg_match( '@^/([^/]+)/@', $uri, $match ) ) {
@@ -50,8 +50,8 @@ class NotFound extends Controller {
 		}
 
 		$this->view->set( 'uri', $uri );
-		$this->view->set( 'name', $info['tool'] );
+		$this->view->set( 'tool', $info['name'] );
 		$this->view->set( 'maintainers', $info['maintainers'] );
-		$this->render( '404.html' );
+		$this->render( "errors/{$errorCode}.html" );
 	}
 }

@@ -191,6 +191,13 @@ class App extends AbstractApp {
 					$slim->render( 'splash.html' );
 				} )->name( 'splash' );
 
+				$slim->get( 'error/:errorCode', function ( $errorCode ) use ( $slim ) {
+					$page = new Pages\Error( $slim );
+					$page->setI18nContext( $slim->i18nContext );
+					$page->setTools( $slim->tools );
+					$page( $errorCode );
+				} )->name( 'error' );
+
 				$slim->get( 'tools', function () use ( $slim ) {
 					$page = new Pages\Tools( $slim );
 					$page->setI18nContext( $slim->i18nContext );
@@ -227,10 +234,10 @@ class App extends AbstractApp {
 		); // end group '/oge'
 
 		$slim->notFound( function () use ( $slim ) {
-			$page = new Pages\NotFound( $slim );
+			$page = new Pages\Error( $slim );
 			$page->setI18nContext( $slim->i18nContext );
 			$page->setTools( $slim->tools );
-			$page();
+			$page( '404' );
 		} );
 	}
 }

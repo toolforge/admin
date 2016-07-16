@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% import "inc/utils.html" as utils %}
+
+{% block title %}404 Not Found{% endblock %}
+
 {% block content %}
 <h1>Four hundred and four!</h1>
 <p>The URI you have requested, <code>{{ uri }}</code>, doesn't seem to actually exist.</p>

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "inc/utils.html" as utils %}
+
+{% block title %}500 Internal Server Error{% endblock %}
+
+{% block content %}
+<h1>Internal error</h1>
+<p>The URI you have requested, <a href="{{ uri }}"><code>{{ uri }}</code></a>, appears to be non-functional at this time.</p>
+{% if tool %}
+<h2>If you have reached this page from somewhere else...</h2>
+<p>This URI is part of the <a href="{{ urlFor('tool', {'name': tool}) }}"><code>{{ tool }}</code></a> tool, maintained by {{ utils.printMaintainers( maintainers ) }}.</p>
+<p>Perhaps its magical script elves are temporarily ill, or the link you've followed doesn't actually lead somewhere useful?<p>
+<p>If you're pretty sure this shouldn't be an error, you may wish to notify the tool's maintainers (above) about the error and how you ended up here.</p>
+<h2>If you maintain this tool</h2>
+<p>The error might be caused by incorrect permission, or by an error in the script or CGI that was meant to execute here. You may wish to check your logs or <a href="https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/Help#Logs">common causes for errors</a> in the help documentation.</p>
+{% else %}
+<p>Perhaps the webserver has temporarily lost its mind, or the link you've followed doesn't actually lead somewhere useful?</p>
+<p>If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', {'name': admin}) }}">project administrators</a> about the error and how you ended up here.</p>
+{% endif %}
+{% endblock content %}
