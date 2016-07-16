@@ -69,6 +69,7 @@ class LabsDao extends AbstractDao {
 		}
 		$row['toolinfo'] = $info;
 		$row['maintainers'] = explode( ' ', $row['maintainers'] );
+		sort( $row['maintainers'] );
 		return $row;
 	}
 }

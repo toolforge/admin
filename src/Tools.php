@@ -54,6 +54,12 @@ class Tools {
 		if ( $g && $u ) {
 			$ret['name'] = $tool;
 			$ret['maintainers'] = $this->getMemberInfo( $g['members'] );
+			usort( $ret['maintainers'], function ( $a, $b ) {
+				$aSort = isset( $a['gecos'] ) ? $a['gecos'] : $a['name'];
+				$bSort = isset( $b['gecos'] ) ? $b['gecos'] : $b['name'];
+				return ( $aSort == $bSort ) ? 0 :
+					( ( $aSort < $bSort ) ? -1 : 1 );
+			} );
 			$ret['home'] = $u['dir'];
 		}
 		return $ret;
