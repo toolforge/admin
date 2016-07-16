@@ -7,7 +7,6 @@
 <h1>Forbidden</h1>
 <p>The URI you have requested, <a href="{{ uri }}"><code>{{ uri }}</code></a>, might exist but the server has been instructed not to let you reach it.</p>
 {% if tool %}
-(?php if ( $tool !== false ) { ?>
 <h2>If you have reached this page from somewhere else...</h2>
 <p>This URI is managed by the <a href="{{ urlFor('tool', {'name': tool}) }}"><code>{{ tool }}</code></a> tool, maintained by {{ utils.printMaintainers( maintainers ) }}.</p>
 <p>Perhaps this content can only be accessed from the secret underground lair of the maintainers, or the link you've followed doesn't actually lead somewhere useful?</p>
