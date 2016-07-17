@@ -199,6 +199,9 @@ span.subtool-desc {
   display: block;
 }
 /* --> */
+.tool-info span.mw-editsection {
+  font-size: 75%;
+}
 
 /* tables */
 table.tablesorter {
