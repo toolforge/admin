@@ -41,6 +41,7 @@ class App extends AbstractApp {
 		}
 
 		$slim->config( [
+			'app.root' => Config::getStr( 'PROJECT_ROOT', '/' ),
 			'qstat.uri' => Config::getStr( 'QSTAT_URI',
 				'https://tools.wmflabs.org/gridengine-status'
 			),
@@ -189,7 +190,7 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureRoutes( \Slim\Slim $slim ) {
-		$slim->group( '/',
+		$slim->group( $slim->config( 'app.root' ),
 			function () use ( $slim ) {
 				$slim->get( '', function () use ( $slim ) {
 					$slim->render( 'splash.html' );
@@ -223,19 +224,15 @@ class App extends AbstractApp {
 					$page->setBaseUrl( $slim->config( 'wiki.base' ) );
 					$page( $name );
 				} )->name( 'wiki' );
-			}
-		); // end group '/'
 
-		$slim->group( '/oge/',
-			function () use ( $slim ) {
-				$slim->get( 'status', function () use ( $slim ) {
+				$slim->get( 'oge/status', function () use ( $slim ) {
 					$page = new Pages\OgeStatus( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setQstat( $slim->qstat );
 					$page();
 				} )->name( 'oge-status' );
 			}
-		); // end group '/oge'
+		); // end group '/'
 
 		$slim->notFound( function () use ( $slim ) {
 			$page = new Pages\Error( $slim );
