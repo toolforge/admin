@@ -39,7 +39,7 @@ class Error extends Controller {
 
 	protected function handleGet( $errorCode ) {
 		$env = \Slim\Environment::getInstance();
-		$uri = $env['HTTP_X_ORIGINAL_URI'];
+		$uri = $env['HTTP_X_ORIGINAL_URI'] ?: $env['PATH_INFO'];
 		if ( preg_match( '@^/([^/]+)/@', $uri, $match ) ) {
 			$info = $this->tools->getToolInfo( $match[1] );
 		} else {
