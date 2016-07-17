@@ -168,32 +168,18 @@ img {
 span.mw-editsection {
   display: block;
 }
-div.subtool {
-  display: block;
+.subtool {
   padding-bottom: 3px;
   border-top: dotted thin #888;
   width: 100%;
 }
-div.subtool.first {
+.subtool.first {
   border-top: none;
 }
-span.subtool-name {
-  display: inline-block;
-  padding-right: 4px;
-  width: 20%;
-}
-span.subtool-desc {
-  display: inline-block;
-  padding-left: 1ex;
-  width: 75%;
-}
-#thebigtable td.tool-desc span.subtool-name,
-#thebigtable td.tool-desc span.subtool-desc {
-  display:block;
-  width:auto;
+.subtool-name {
   padding:0;
 }
-#thebigtable td.tool-desc span.subtool-desc {
+.subtool-desc {
   padding-left:1em;
 }
 

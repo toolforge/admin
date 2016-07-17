@@ -21,7 +21,7 @@
     <td>
       {% for info in tool.toolinfo %}
       <div class="subtool {% if loop.first %}first{% endif %}">
-        <span class="subtool-name">
+        <div class="subtool-name">
           {% if info.url %}
           <a href="{{ info.url }}">{{ info.title }}</a>
           {% elseif tool.toolinfo|length == 1 and active %}
@@ -29,10 +29,10 @@
           {% else %}
           {{ info.title }}
           {% endif %}
-        </span>
-          <span class="subtool-desc">{{ utils.describe_tool(info) }}</span>
         </div>
-        {% endfor %}
+        <div class="subtool-desc">{{ utils.describe_tool(info) }}</div>
+      </div>
+      {% endfor %}
     </td>
   </tr>
 </table>
