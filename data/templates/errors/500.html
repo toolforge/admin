@@ -15,6 +15,6 @@
 <p>The error might be caused by incorrect permission, or by an error in the script or CGI that was meant to execute here. You may wish to check your logs or <a href="https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/Help#Logs">common causes for errors</a> in the help documentation.</p>
 {% else %}
 <p>Perhaps the webserver has temporarily lost its mind, or the link you've followed doesn't actually lead somewhere useful?</p>
-<p>If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', {'name': admin}) }}">project administrators</a> about the error and how you ended up here.</p>
+<p>If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', {'name': 'admin'}) }}">project administrators</a> about the error and how you ended up here.</p>
 {% endif %}
 {% endblock content %}

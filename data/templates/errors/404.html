@@ -13,6 +13,6 @@
 <p>You might want to looks at the <a href="{{ urlFor('tools') }}">list of tools</a> to find what you were looking for, or one of the links on the sidebar to the left. If you're pretty sure this shouldn't be an error, you may wish to notify the tool's maintainers (above) about the error and how you ended up here.</p>
 {% else %}
 <p>Perhaps the webserver has temporarily lost its mind, or the link you've followed doesn't actually lead somewhere useful?</p>
-<p>You might want to looks at the <a href="{{ urlFor('tools') }}">list of tools</a> to find what you were looking for, or one of the links on the sidebar to the left. If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', {'name': admin}) }}">project administrators</a> about the error and how you ended up here.</p>
+<p>You might want to looks at the <a href="{{ urlFor('tools') }}">list of tools</a> to find what you were looking for, or one of the links on the sidebar to the left. If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', {'name': 'admin'}) }}">project administrators</a> about the error and how you ended up here.</p>
 {% endif %}
 {% endblock content %}
