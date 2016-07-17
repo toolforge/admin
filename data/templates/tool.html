@@ -25,11 +25,11 @@
           {% if info.url %}
           <a href="{{ info.url }}">{{ info.title }}</a>
           {% elseif tool.toolinfo|length == 1 and active %}
-          <a class="tool-web" href="/{{ tool.name }}/">{{ tool.name }}</a
-            {% else %}
-            {{ info.title }}
-            {% endif %}
-          </span>
+          <a class="tool-web" href="/{{ tool.name }}/">{{ tool.name }}</a>
+          {% else %}
+          {{ info.title }}
+          {% endif %}
+        </span>
           <span class="subtool-desc">{{ utils.describe_tool(info) }}</span>
         </div>
         {% endfor %}
