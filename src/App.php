@@ -31,10 +31,14 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureSlim( \Slim\Slim $slim ) {
-		// TODO: make this optional?
+		// Load my.cnf if file exists
 		$mycnf_file = Config::getStr( 'MY_CNF',
-			APP_ROOT . '/../replica.my.cnf' );
-		$mycnf = parse_ini_file( $mycnf_file );
+			"{$this->deployDir}/../replica.my.cnf" );
+		if ( is_readable( $mycnf_file ) ) {
+			$mycnf = parse_ini_file( $mycnf_file );
+		} else {
+			$mycnf = [ 'user' => '', 'password' => '', ];
+		}
 
 		$slim->config( [
 			'qstat.uri' => Config::getStr( 'QSTAT_URI',
