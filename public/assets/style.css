@@ -187,6 +187,15 @@ span.subtool-desc {
   padding-left: 1ex;
   width: 75%;
 }
+#thebigtable td.tool-desc span.subtool-name,
+#thebigtable td.tool-desc span.subtool-desc {
+  display:block;
+  width:auto;
+  padding:0;
+}
+#thebigtable td.tool-desc span.subtool-desc {
+  padding-left:1em;
+}
 
 /* Backwards and goofy */
 .tool-name {
@@ -345,15 +354,6 @@ span.hostname {
     white-space:nowrap;
   }
   #thebigtable td.tool-desc {
-    padding-left:1em;
-  }
-  #thebigtable td.tool-desc span.subtool-name,
-  #thebigtable td.tool-desc span.subtool-desc {
-    display:block;
-    width:auto;
-    padding:0;
-  }
-  #thebigtable td.tool-desc span.subtool-desc {
     padding-left:1em;
   }
 }
