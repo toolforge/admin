@@ -41,7 +41,6 @@ class App extends AbstractApp {
 		}
 
 		$slim->config( [
-			'app.root' => Config::getStr( 'PROJECT_ROOT', '/' ),
 			'qstat.uri' => Config::getStr( 'QSTAT_URI',
 				'https://tools.wmflabs.org/gridengine-status'
 			),
@@ -190,7 +189,54 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureRoutes( \Slim\Slim $slim ) {
-		$slim->group( $slim->config( 'app.root' ),
+		$slim->hook( 'slim.before.router', function () use ( $slim ) {
+			$env = $slim->environment;
+			$path = $env['PATH_INFO'];
+			$qs = $env['QUERY_STRING'];
+
+			if ( substr( $path, 0, 2 ) === '/.' ) {
+				// Treat /. as /? by moving path data into query string. This
+				// may be legacy legacy behavior. Documented previously as
+				// being used for error_document handling where query strings
+				// were not allowed in the webserver/proxy config.
+				$qs = substr( $path, 2 );
+				$path = '/';
+			}
+
+			if ( $path === '/' && $qs !== '' ) {
+				// Map query string routes into path based routes.
+				$parts = explode( '=', $qs, 2 );
+				if ( $parts[0] === 'list' ) {
+					$path .= 'tools';
+
+				} elseif ( $parts[0] === 'status' ) {
+					$path .= 'oge/status';
+
+				} elseif ( in_array( $parts[0], [ '403', '404', '500', '503' ] ) ) {
+					$path .= "error/{$parts[0]}";
+
+				} elseif ( $parts[0] === 'tool' && count( $parts ) === 2 ) {
+
+					$path .= "tool/{$parts[1]}";
+
+				} elseif ( preg_match( '/^[A-Z]/', $parts[0] ) ) {
+					$path .= "wiki/{$parts[0]}";
+
+				} else {
+					$slim->log->info( 'Unhandled query string: {qs}', [
+						'qs' => $qs,
+					] );
+				}
+				$qs = '';
+			}
+
+			$env['PATH_INFO'] = $path;
+			$env['QUERY_STRING'] = $qs;
+			// Clear Slim\Http\Request's internal query string cache
+			unset( $env['slim.request.query_hash'] );
+		}, 0 );
+
+		$slim->group( '/',
 			function () use ( $slim ) {
 				$slim->get( '', function () use ( $slim ) {
 					$slim->render( 'splash.html' );
@@ -238,7 +284,7 @@ class App extends AbstractApp {
 			$page = new Pages\Error( $slim );
 			$page->setI18nContext( $slim->i18nContext );
 			$page->setTools( $slim->tools );
-			$page( '404' );
+			$page( '404', true );
 		} );
 	}
 }
