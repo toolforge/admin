@@ -1,11 +1,11 @@
-Tool Labs Admin
+Toolforge Admin
 ===============
 
-Wikimedia Tool Labs landing page and general information.
+Wikimedia Toolforge landing page and general information.
 
 License
 -------
-Tool Labs Admin is licensed under the GPL 3.0 license and copyright 2016
+Toolforge Admin is licensed under the GPL 3.0 license and copyright 2017
 Wikimedia Foundation and contributors. See the `LICENSE` file for more
 details.
 

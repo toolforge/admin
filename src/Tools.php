@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of Tool Labs Admin
+ * This file is part of Toolforge Admin
  * Copyright (C) 2016  Wikimedia Foundation and contributors
  *
  * This program is free software: you can redistribute it and/or modify it
