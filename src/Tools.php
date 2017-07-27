@@ -48,9 +48,9 @@ class Tools {
 			'maintainers' => [],
 			'home' => null,
 		];
-		$shallName = "tools.{$tool}";
-		$g = posix_getgrnam( $shallName );
-		$u = posix_getpwnam( $shallName );
+		$shellName = "tools.{$tool}";
+		$g = posix_getgrnam( $shellName );
+		$u = posix_getpwnam( $shellName );
 		if ( $g && $u ) {
 			$ret['name'] = $tool;
 			$ret['maintainers'] = $this->getMemberInfo( $g['members'] );
