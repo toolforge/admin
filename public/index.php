@@ -36,13 +36,6 @@ try {
 }
 restore_error_handler();
 
-// TODO: Handle legacy madness of /?(...) URLs
-// TODO: Handle legacy madness of /.(...) URLs
-// TODO: Handle legacy bare tool name -> tool/ 301 redir
-// TODO: Handle acting as global 503 handler
-// TODO: Handle acting as global 404 handler
-// TODO: Handle query string 302 to wikitech content
-
 // Load environment settings from .env if present
 if ( is_readable( APP_ROOT . '/.env' ) ) {
 	\Wikimedia\Slimapp\Config::load( APP_ROOT . '/.env' );
