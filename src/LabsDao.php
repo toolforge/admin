@@ -22,9 +22,15 @@ namespace Tools\Admin;
 use Wikimedia\Slimapp\Dao\AbstractDao;
 
 /**
- * Data access objcet for Labs database
+ * Data access object for Labs database
  */
 class LabsDao extends AbstractDao {
+
+	public function __construct( $dsn, $user, $pass, $logger = null ) {
+		parent::__construct( $dsn, $user, $pass, $logger );
+		// FIXME: Horrible hack for T164971
+		$this->dbh->exec( 'set names latin1' );
+	}
 
 	public function getAllUsers() {
 		$users = [];
