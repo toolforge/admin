@@ -6,7 +6,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, width=device-width">
-	<title>{% block title %}{{ 'site-title'|message }}{% endblock title %}</title>
+    <title>{% block title %}{{ 'site-title'|message }}{% endblock title %}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ siteUrl('assets/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ siteUrl('assets/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="194x194" href="{{ siteUrl('assets/favicon/favicon-194x194.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ siteUrl('assets/favicon/android-chrome-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ siteUrl('assets/favicon/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ siteUrl('assets/favicon/safari-pinned-tab.svg') }}" color="#339966">
+    <link rel="shortcut icon" href="{{ siteUrl('assets/favicon/favicon.ico') }}">
+    <meta name="apple-mobile-web-app-title" content="Toolforge">
+    <meta name="application-name" content="Toolforge">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" type="text/css" href="{{ siteUrl('assets/style.css') }}">
     <!--[if lt IE 7]><style media="screen" type="text/css">.col1 {width:100%;}</style> <![endif]-->
     {% block css %}{% endblock css %}
@@ -19,7 +29,7 @@
             {% block post_content %}{% endblock post_content %}
         </div></div>
         <div class="col2">
-            <div id="logo"><a href="{{ urlFor('splash') }}"><img src="{{ siteUrl('assets/Tool_Labs_logo_thumb.png') }}" width="122" height="138" alt="{{ 'nav-logo-alt'|message }}"></a></div>
+            <div id="logo"><a href="{{ urlFor('splash') }}"><img src="{{ siteUrl('assets/Toolforge.png') }}" width="125" height="124" alt="{{ 'nav-logo-alt'|message }}"></a></div>
           <ul>
             <li><a href="{{ urlFor('tools') }}">{{ 'nav-tools'|message }}</a></li>
             <li><a href="{{ urlFor('oge-status') }}">{{ 'nav-status'|message }}</a></li>
