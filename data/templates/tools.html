@@ -32,7 +32,7 @@
         {% else %}
         {{ tool.name }}
         {% endif %}
-        <span class="mw-editsection">[<a href="https://wikitech.wikimedia.org/w/index.php?title=Special:NovaServiceGroup&action=managemembers&projectname=tools&servicegroupname=tools.{{ tool.name|url_encode }}">manage</a> maintainers]</span>
+        <span class="mw-editsection">[<a href="https://toolsadmin.wikimedia.org/tools/id/{{ tool.name|url_encode }}/maintainers/">manage</a> maintainers]</span>
       </td>
       <td class="tool-maintainers">
         {% for maintainer in tool.maintainers %}
