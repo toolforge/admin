@@ -24,11 +24,11 @@
         {% elseif tool.toolinfo|length == 1 and active %}
         <a href="/{{ tool.name }}/">{{ tool.name }}</a>
         {% else %}
-        {{ info.title }}
+        {{ info.title|default(tool.name) }}
         {% endif %}
       </h3>
       <div class="card-body">
-        <div>{{ info.description|purify }}</div>
+        <div>{{ info.description|default('No .description or toolinfo.json found')|purify }}</div>
         {% if info.author or info.repository %}
         <dl class="row">
           {% if info.author %}
