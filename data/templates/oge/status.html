@@ -2,28 +2,35 @@
 
 {% block title %}{{ 'status-title'|message }} - {{ parent() }}{% endblock title %}
 
+{% block nav_li_oge_status %}active{% endblock %}
+
 {% block content %}
-<h1>{{ 'tool-labs'|message }}</h1>
-<p>{{ 'tool-labs-desc'|message }}</p>
-<h2>{{ 'status-header'|message }}</h2>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{{ urlFor('splash') }}">{{ 'nav-home'|message }}</a></li>
+  <li class="breadcrumb-item active">{{ 'nav-status'|message }}</li>
+</ol>
+
+<h1>{{ 'status-header'|message }}</h1>
 
 {% for hostname, host in data.attributes %}
-<div class="hostline" id="{{ hostname }}">
-  <span class="hostname">{{ hostname }}</span>
+<h2>
+  {{ hostname }}
+  <small class="text-muted">
   <b>{{ 'status-load'|message }}</b> {{ host.load }}%
   <b>{{ 'status-memory'|message }}</b> {{ host.mem }}%
   {% if host.vmem > 0 %}<b>{{ 'status-free-vmem'|message }}</b> {{ host.vmem|humanmem }}{% endif %}
-</div>
-<table class="hostjobs tablesorter">
+  </small>
+</h2>
+<table class="table table-striped table-sm table-responsive tablesort">
   <thead>
     <tr>
-      <th>{{ 'status-number'|message }}</th>
+      <th data-sort-default>{{ 'status-number'|message }}</th>
       <th>{{ 'status-name'|message }}</th>
       <th>{{ 'status-tool'|message }}</th>
       <th>{{ 'status-state'|message }}</th>
-      <th>{{ 'status-time'|message }}</th>
-      <th>{{ 'status-cpu'|message }}</th>
-      <th>{{ 'status-vmem'|message }}</th>
+      <th data-sort-method="number">{{ 'status-time'|message }}</th>
+      <th data-sort-methos="number">{{ 'status-cpu'|message }}</th>
+      <th data-sort-methos="number">{{ 'status-vmem'|message }}</th>
     </tr>
   </thead>
   <tbody>
@@ -33,9 +40,9 @@
       <td class="jobname">{{ job.name }}</td>
       <td class="jobtool"><a href="{{ urlFor('tool', {'name': job.tool}) }}">{{ job.tool }}</a></td>
       <td class="jobstate">{{ job.queue|capitalize }} / {{ job.state|capitalize }}</td>
-      <td class="jobtime">{{ job.submit|date("Y-m-d H:i:s") }}</td>
-      <td class="jobcpu">{% if job.cpu is not empty %}{{ job.cpu|humantime }}{% else %}{{ 'status-na'|message }}{% endif %}</td>
-      <td class="jobvmem">{% if job.vmem is not empty %}{{ (job.vmem / 1024 / 1024)|humanmem }}/{{ (job.h_vmem / 1024 / 1024)|humanmem }}
+      <td class="jobtime" data-sort="{{ job.submit }}">{{ job.submit|date("Y-m-d H:i:s") }}</td>
+      <td class="jobcpu" data-sort="{{ job.cpu|default(0) }}">{% if job.cpu is not empty %}{{ job.cpu|humantime }}{% else %}{{ 'status-na'|message }}{% endif %}</td>
+      <td class="jobvmem" data-sort="{{ job.vmem|default(0) }}">{% if job.vmem is not empty %}{{ (job.vmem / 1024 / 1024)|humanmem }}/{{ (job.h_vmem / 1024 / 1024)|humanmem }}
         {% if job.maxvmem > job.vmem %}({{ 'status-peak'|message }} {{ (job.maxvmem / 1024 / 1024)|humanmem }}){% endif %}
         {% endif %}</td>
     </tr>
@@ -45,4 +52,7 @@
 {% endfor %}
 {% endblock content %}
 
-{% block javascript %}{% include '_tablesort-js.html' %}{% endblock javascript %}
+{% block javascript %}
+{{ parent() }}
+{% include '_tablesort-js.html' %}
+{% endblock javascript %}

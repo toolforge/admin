@@ -3,39 +3,70 @@
 
 {% block title %}{{ 'tool-title'|message(tool.name) }} - {{ parent() }}{% endblock %}
 
+{% block nav_li_tools %}active{% endblock %}
+
 {% block content %}
-<h1>{{ 'tool-labs'|message }}</h1>
-<p>{{ 'tool-labs-desc'|message }}</p>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="{{ urlFor('splash') }}">{{ 'nav-home'|message }}</a></li>
+  <li class="breadcrumb-item"><a href="{{ urlFor('tools') }}">{{ 'nav-tools'|message }}</a></li>
+  <li class="breadcrumb-item active">{{ tool.name|default('unknown') }}</li>
+</ol>
 
 {% if tool.name %}
-<h2>Tool account: {{ tool.name }}</h2>
-<table class="tool-info" cols="2" width="95%">
-  <tr>
-    <th>Maintainers</th>
-    <td>{{ utils.printMaintainers( maintainers ) }}
-      <br><span class="mw-editsection">[<a href="https://toolsadmin.wikimedia.org/tools/id/{{ tool.name|url_encode }}/maintainers/">manage</a> maintainers]</span>
-    </td>
-  </tr>
-  <tr>
-    <th>Tool{% if tool.toolinfo|length > 1 %}s{% endif %}</th>
-    <td>
-      {% for info in tool.toolinfo %}
-      <div class="subtool {% if loop.first %}first{% endif %}">
-        <div class="subtool-name">
-          {% if info.url %}
-          <a href="{{ info.url }}">{{ info.title }}</a>
-          {% elseif tool.toolinfo|length == 1 and active %}
-          <a class="tool-web" href="/{{ tool.name }}/">{{ tool.name }}</a>
-          {% else %}
-          {{ info.title }}
+<h1>Tool account: {{ tool.name }}</h1>
+<div class="row">
+  <div class="col-sm-9 order-12">
+    {% for info in tool.toolinfo %}
+    <div class="card">
+      <h3 class="card-header">
+        {% if info.url %}
+        <a href="{{ info.url }}">{{ info.title }}</a>
+        {% elseif tool.toolinfo|length == 1 and active %}
+        <a href="/{{ tool.name }}/">{{ tool.name }}</a>
+        {% else %}
+        {{ info.title }}
+        {% endif %}
+      </h3>
+      <div class="card-body">
+        <div>{{ info.description|purify }}</div>
+        {% if info.author or info.repository %}
+        <dl class="row">
+          {% if info.author %}
+          <dt class="col-sm-3">Author(s):</dt>
+          <dd class="col-sm-9">{{ info.author|purify }}</dd>
           {% endif %}
-        </div>
-        <div class="subtool-desc">{{ utils.describe_tool(info) }}</div>
+          {% if info.repository %}
+          <dt class="col-sm-3">Source code</dt>
+          <dd class="col-sm-9">
+            <a href="{{ info.repository }}">{{ info.repository }}</a>
+          </dd>
+          {% endif %}
+        </dl>
+        {% endif %}
       </div>
-      {% endfor %}
-    </td>
-  </tr>
-</table>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="col-sm-3 order-1">
+    <div class="card">
+      <div class="card-header">Maintainers</div>
+      <ul class="list-group list-group-flush">
+        {% for maintainer in maintainers %}
+        <li class="list-group-item">
+          {% if maintainer.gecos %}
+          <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos)|url_encode }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
+          {% else %}
+          {{- utils.ucfirst(maintainer.name) -}}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="card-footer text-muted">
+        <a href="https://toolsadmin.wikimedia.org/tools/id/{{ tool.name|url_encode }}/maintainers/">manage maintainers</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% else %}
 <p>No such tool?  Trying to guess, are you?</p>
 {% endif %}

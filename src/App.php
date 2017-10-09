@@ -177,9 +177,11 @@ class App extends AbstractApp {
 	 */
 	protected function configureHeaderMiddleware() {
 		$headers = parent::configureHeaderMiddleware();
-		// The tablesort plugin needs eval (gross!)
-		$headers['Content-Security-Policy'] .=
-			"; script-src 'self' 'unsafe-eval'";
+		$headers['Content-Security-Policy'] =
+			"default-src 'self' https://tools-static.wmflabs.org; " .
+			"child-src 'none'; " .
+			"object-src 'none'; " .
+			"img-src 'self' data: https://tools-static.wmflabs.org";
 		return $headers;
 	}
 
