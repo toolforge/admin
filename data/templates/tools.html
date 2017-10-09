@@ -13,31 +13,52 @@
 
 <h1>{{ 'tools-header'|message }}</h1>
 
-<table class="table table-striped table-sm table-responsive">
-  <thead>
-    <tr>
-      <th>Tool</th>
-      <th>Maintainers</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for tool in tools %}
-    <tr>
-      <th scope="row"><a href="{{ urlFor('tool', {'name': tool.name}) }}">{{ tool.name }}</a></th>
-      <td>
-        <ul class="list-inline">
-          {% for maintainer in tool.maintainers %}
-          {% if users[maintainer] %}
-          {% set wiki_user = users[maintainer].wikitech %}
-          <li class="list-inline-item">
-            <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(wiki_user) }}">{{ utils.ucfirst(wiki_user) }}</a>
-          </li>
-          {% endif %}
-          {% endfor %}
-        </ul>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="card-group">
+  {% for tool in tools %}
+  {% for info in tool.toolinfo %}
+  <div class="card toolinfo">
+    <div class="card-body">
+      <h4 class="card-title">
+        {% if info.url %}
+        <a href="{{ info.url }}">{{ info.title|default(tool.name) }}</a>
+        {% elseif tool.toolinfo|length == 1 and active[tool.name] %}
+        <a href="/{{ tool.name }}/">{{ tool.name }}</a>
+        {% else %}
+        {{ info.title|default(tool.name) }}
+        {% endif %}
+      </h4>
+      <h6 class="card-subtitle mb-2 text-muted">
+        Tool: <a href="{{ urlFor('tool', {'name': tool.name}) }}">{{ tool.name }}</a>
+      </h6>
+      <div class="card-text">{{ info.description|purify }}</div>
+      <dl class="row small">
+        {% if info.author %}
+        <dt class="col-md-4">Author</dt>
+        <dd class="col-md-8 pl-0">{{ info.author|purify }}</dd>
+        {% endif %}
+        {% if info.repository %}
+        <dt class="col-md-4">Source</dt>
+        <dd class="col-md-8 pl-0">
+          <a href="{{ info.repository }}">{{ info.repository }}</a>
+        </dd>
+        {% endif %}
+        <dt class="col-md-4">Maintainer</dt>
+        <dd class="col-md-8 pl-0">
+          <ul class="list-inline">
+            {% for maintainer in tool.maintainers %}
+            {% if users[maintainer] %}
+            {% set wiki_user = users[maintainer].wikitech %}
+            <li class="list-inline-item">
+              <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(wiki_user)|escape('url')|raw }}">{{ utils.ucfirst(wiki_user) }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </dd>
+      </dl>
+    </div>
+  </div>
+  {% endfor %}
+  {% endfor %}
+</div>
 {% endblock content %}

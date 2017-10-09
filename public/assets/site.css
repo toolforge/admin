@@ -9,6 +9,17 @@ h2 {
   padding:0 0 .5em 0;
 }
 
+.card-group .toolinfo {
+  min-width:300px;
+}
+.toolinfo .card-body {
+  padding-top:0.25em;
+  padding-bottom:0;
+}
+.toolinfo .list-inline {
+  margin-bottom:0;
+}
+
 .tablesort th[role=columnheader]:not(.no-sort) {
   cursor: pointer;
 }
