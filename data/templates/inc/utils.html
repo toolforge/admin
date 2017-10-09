@@ -18,8 +18,9 @@ Convert a string to a likely wiki title.
 ucfirst + convert spaces to underscores
 #}
 {% macro as_title( word ) %}
-{% import _self as utils %}
-{{- utils.ucfirst(word)|replace({' ': '_'}) -}}
+{% autoescape 'url' %}
+{{- word[:1]|upper ~ word[1:]|replace({' ': '_'}) -}}
+{% endautoescape %}
 {% endmacro %}
 
 {##
@@ -30,7 +31,7 @@ wiki username was not found.
 {% import _self as utils %}
 {% for maintainer in maintainers %}
 {% if maintainer.gecos %}
-<a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos)|url_encode }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
+<a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos) }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
 {% else %}
 {{- utils.ucfirst(maintainer.name) -}}
 {% endif %}

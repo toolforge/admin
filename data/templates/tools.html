@@ -30,7 +30,7 @@
           {% if users[maintainer] %}
           {% set wiki_user = users[maintainer].wikitech %}
           <li class="list-inline-item">
-            <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(wiki_user)|url_encode }}">{{ utils.ucfirst(wiki_user) }}</a>
+            <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(wiki_user) }}">{{ utils.ucfirst(wiki_user) }}</a>
           </li>
           {% endif %}
           {% endfor %}

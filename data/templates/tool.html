@@ -54,7 +54,7 @@
         {% for maintainer in maintainers %}
         <li class="list-group-item">
           {% if maintainer.gecos %}
-          <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos)|url_encode }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
+          <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos) }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
           {% else %}
           {{- utils.ucfirst(maintainer.name) -}}
           {% endif %}
