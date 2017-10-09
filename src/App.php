@@ -251,6 +251,13 @@ class App extends AbstractApp {
 					$page( $errorCode );
 				} )->name( 'error' );
 
+				$slim->get( 'favicon.ico', function () use ( $slim ) {
+					$slim->redirect(
+						'https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico',
+						301
+					);
+				} )->name( 'favicon' );
+
 				$slim->get( 'tools', function () use ( $slim ) {
 					$page = new Pages\Tools( $slim );
 					$page->setI18nContext( $slim->i18nContext );
