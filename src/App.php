@@ -218,7 +218,6 @@ class App extends AbstractApp {
 					$path .= "error/{$parts[0]}";
 
 				} elseif ( $parts[0] === 'tool' && count( $parts ) === 2 ) {
-
 					$path .= "tool/{$parts[1]}";
 
 				} elseif ( preg_match( '/^[A-Z]/', $parts[0] ) ) {

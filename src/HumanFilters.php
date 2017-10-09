@@ -43,12 +43,12 @@ class HumanFilters extends Twig_Extension {
 	}
 
 	public function humanmemFilterCallback( $megs ) {
-		if ( $megs > 1024 )  {
-			$megs = (int) ( $megs / 102.4 );
+		if ( $megs > 1024 ) {
+			$megs = (int)( $megs / 102.4 );
 			$megs /= 10.0;
 			return "{$megs}G";
 		}
-		$megs = (int) ( $megs * 10 );
+		$megs = (int)( $megs * 10 );
 		$megs /= 10.0;
 		return "{$megs}M";
 	}
@@ -56,19 +56,19 @@ class HumanFilters extends Twig_Extension {
 	public function humantimeFilterCallback( $secs ) {
 		$parts = [];
 		if ( $secs > 86400 ) {
-			$days = (int) ( $secs / 86400 );
+			$days = (int)( $secs / 86400 );
 			$secs = $secs % 86400;
 			$parts[] = "{$days}d";
 		}
 		if ( $secs > 3600 ) {
-			$hours = (int) ( $secs / 3600 );
+			$hours = (int)( $secs / 3600 );
 			$secs = $secs % 3600;
 			$parts[] = "{$hours}h";
 		} elseif ( $parts ) {
 			$parts[] = '0h';
 		}
 		if ( $secs > 60 ) {
-			$mins = (int) ( $secs / 60 );
+			$mins = (int)( $secs / 60 );
 			$secs = $secs % 60;
 			$parts[] = "{$mins}m";
 		} elseif ( $parts ) {

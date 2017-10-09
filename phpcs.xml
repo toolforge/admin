@@ -11,5 +11,11 @@
   <arg name="report" value="summary"/>
   <arg value="sp"/>
 
-  <rule ref="vendor/mediawiki/mediawiki-codesniffer/MediaWiki"/>
+  <rule ref="vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
+    <exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationProtected"/>
+    <exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationPublic"/>
+    <exclude name="MediaWiki.Commenting.FunctionComment.MissingParamComment"/>
+    <exclude name="MediaWiki.Commenting.FunctionComment.MissingReturn"/>
+    <exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment"/>
+  </rule>
 </ruleset>
