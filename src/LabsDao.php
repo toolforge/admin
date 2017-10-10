@@ -73,7 +73,12 @@ class LabsDao extends AbstractDao {
 		if ( !array_key_exists( 0, $info ) ) {
 			$info = [ $info ];
 		}
-		$row['toolinfo'] = $info;
+		// Filter out things that are not hosted on Toolforge
+		$row['toolinfo'] = array_filter( $info, function ( $tool ) {
+			return array_key_exists( 'url', $tool ) ?
+				( strpos( $tool['url'], 'tools.wmflabs.org' ) !== false ) :
+				true;
+		} );
 		$row['maintainers'] = explode( ' ', $row['maintainers'] );
 		sort( $row['maintainers'] );
 		return $row;
