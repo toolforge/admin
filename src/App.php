@@ -52,6 +52,7 @@ class App extends AbstractApp {
 			'wiki.base' => Config::getStr( 'WIKI_BASE',
 				'https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/'
 			),
+			'redis.host' => Config::getStr( 'REDIS_HOST', 'tools-redis' ),
 		] );
 
 		$slim->configureMode( 'production', function () use ( $slim ) {
@@ -88,6 +89,10 @@ class App extends AbstractApp {
 	 * @param \Slim\Helper\Set $container IOC container
 	 */
 	protected function configureIoc( \Slim\Helper\Set $container ) {
+		$container->singleton( 'cache', function ( $c ) {
+			return new Cache( $c->settings['redis.host'] );
+		} );
+
 		$container->singleton( 'i18nCache', function ( $c ) {
 			return new JsonCache(
 				$c->settings['i18n.path'], $c->log
@@ -127,6 +132,7 @@ class App extends AbstractApp {
 			return new LabsDao(
 				$c->settings['db.dsn'],
 				$c->settings['db.user'], $c->settings['db.pass'],
+				$c->cache,
 				$c->log
 			);
 		} );

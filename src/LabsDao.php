@@ -26,40 +26,58 @@ use Wikimedia\Slimapp\Dao\AbstractDao;
  */
 class LabsDao extends AbstractDao {
 
-	public function __construct( $dsn, $user, $pass, $logger = null ) {
+	private $cache;
+
+	public function __construct(
+		$dsn, $user, $pass, $cache, $logger = null
+	) {
 		parent::__construct( $dsn, $user, $pass, $logger );
 		// FIXME: Horrible hack for T164971
 		$this->dbh->exec( 'set names latin1' );
+		$this->cache = $cache;
 	}
 
 	public function getAllUsers() {
-		$users = [];
-		$records = $this->fetchAll( 'SELECT * FROM users' );
-		foreach ( $records as $idx => $row ) {
-			$users[$row['name']] = $row;
+		$key = 'labdb:users';
+		$users = $this->cache->load( $key );
+		if ( !$users ) {
+			$records = $this->fetchAll( 'SELECT * FROM users' );
+			foreach ( $records as $idx => $row ) {
+				$users[$row['name']] = $row;
+			}
+			$this->cache->save( $key, $users, 900 );
 		}
 		return $users;
 	}
 
 	public function getAllTools() {
-		$tools = [];
-		$records = $this->fetchAll( 'SELECT * FROM tools ORDER BY name ASC' );
-		foreach ( $records as $idx => $row ) {
-			$tools[$row['name']] = $this->toolsRowToArray( $row );
+		$key = 'labsdb:alltools';
+		$tools = $this->cache->load( $key );
+		if ( !$tools ) {
+			$records = $this->fetchAll(
+				'SELECT * FROM tools ORDER BY name ASC' );
+			foreach ( $records as $idx => $row ) {
+				$tools[$row['name']] = $this->toolsRowToArray( $row );
+			}
+			$this->cache->save( $key, $tools, 900 );
 		}
 		return $tools;
 	}
 
 	public function getTool( $name ) {
-		$row = $this->fetch(
-			'SELECT * FROM tools WHERE name = ?',
-			[ $name ]
-		);
-		if ( $row ) {
-			return $this->toolsRowToArray( $row );
-		} else {
-			return false;
+		$key = "labsdb:tool:{$name}";
+		$tool = $this->cache->load( $key );
+		if ( !$tool ) {
+			$row = $this->fetch(
+				'SELECT * FROM tools WHERE name = ?',
+				[ $name ]
+			);
+			if ( $row ) {
+				$tool = $this->toolsRowToArray( $row );
+				$this->cache->save( $key, $tool, 900 );
+			}
 		}
+		return $tool;
 	}
 
 	protected function toolsRowToArray( $row ) {
