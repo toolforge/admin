@@ -88,8 +88,17 @@ class LabsDao extends AbstractDao {
 			}
 		}
 		if ( !$info ) {
-			$info = [ [ 'description' => $row['description'] ] ];
+			$info = [ [
+				'name' => $row['name'],
+				'title' => $row['name'],
+				'description' => $row['description'],
+			] ];
 		}
+		usort( $info, function ( $a, $b ) {
+			$an = $a['title'] ?: $a['name'];
+			$bn = $b['title'] ?: $b['name'];
+			return strcmp( $an, $bn );
+		} );
 		$row['toolinfo'] = $info;
 		$row['maintainers'] = explode( ' ', $row['maintainers'] );
 		sort( $row['maintainers'] );
