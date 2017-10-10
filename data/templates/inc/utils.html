@@ -1,14 +1,6 @@
-
 {##
-Describe a tool based on toolinfo data
-@param info toolinfo
+Make a string's first character uppercase
 #}
-{% macro describe_tool( info ) %}
-{{ info.description|purify }}
-{% if info.author %}<br><i>Author(s): {{ info.author|purify }}</i>{% endif %}
-{% if info.repository %}<br><a href="{{ info.repository }}">Source</a>{% endif %}
-{% endmacro %}
-
 {% macro ucfirst( word ) %}
 {{- word[:1]|upper ~ word[1:] -}}
 {% endmacro %}
