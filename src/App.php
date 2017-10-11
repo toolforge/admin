@@ -53,6 +53,9 @@ class App extends AbstractApp {
 				'https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/'
 			),
 			'redis.host' => Config::getStr( 'REDIS_HOST', 'tools-redis' ),
+			'toolinfo.uri' => Config::getStr( 'TOOLINFO_URI',
+				'https://tools.wmflabs.org/hay/directory/api.php'
+			),
 		] );
 
 		$slim->configureMode( 'production', function () use ( $slim ) {
@@ -113,6 +116,11 @@ class App extends AbstractApp {
 			return new Tools( $c->cache, $c->log );
 		} );
 
+		$container->singleton( 'toolinfo', function ( $c ) {
+			return new Toolinfo(
+				$c->settings['toolinfo.uri'], $c->cache, $c->log );
+		} );
+
 		$container->singleton( 'purifierConfig', function ( $c ) {
 			$config = \HTMLPurifier_Config::createDefault();
 			$config->set( 'HTML.Doctype', 'HTML 4.01 Transitional' );
@@ -133,6 +141,7 @@ class App extends AbstractApp {
 				$c->settings['db.dsn'],
 				$c->settings['db.user'], $c->settings['db.pass'],
 				$c->cache,
+				$c->toolinfo,
 				$c->log
 			);
 		} );

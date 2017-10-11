@@ -27,14 +27,16 @@ use Wikimedia\Slimapp\Dao\AbstractDao;
 class LabsDao extends AbstractDao {
 
 	private $cache;
+	private $toolinfo;
 
 	public function __construct(
-		$dsn, $user, $pass, $cache, $logger = null
+		$dsn, $user, $pass, $cache, $toolinfo, $logger = null
 	) {
 		parent::__construct( $dsn, $user, $pass, $logger );
 		// FIXME: Horrible hack for T164971
 		$this->dbh->exec( 'set names latin1' );
 		$this->cache = $cache;
+		$this->toolinfo = $toolinfo;
 	}
 
 	public function getAllUsers() {
@@ -81,30 +83,7 @@ class LabsDao extends AbstractDao {
 	}
 
 	protected function toolsRowToArray( $row ) {
-		$info = null;
-		if ( $row['toolinfo'] != '' ) {
-			$info = json_decode( $row['toolinfo'], true );
-			if ( $info !== null ) {
-				if ( !array_key_exists( 0, $info ) ) {
-					$info = [ $info ];
-				}
-				// Filter out things that are not hosted on Toolforge
-				// or are hosted by other tools
-				$info = array_filter(
-					$info,
-					function ( $tool ) use ( $row ) {
-						if ( array_key_exists( 'url', $tool ) ) {
-							$url = $tool['url'];
-							return (
-								strpos( $url, 'tools.wmflabs.org' ) !== false &&
-								strpos( $url, $row['name'] ) !== false
-							);
-						}
-						return true;
-					}
-				);
-			}
-		}
+		$info = $this->toolinfo->getInfo( $row['name'] );
 		if ( !$info ) {
 			$info = [ [
 				'name' => $row['name'],
