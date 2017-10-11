@@ -24,14 +24,21 @@ use Psr\Log\LoggerInterface;
 
 class Tools {
 	/**
+	 * @var Cache $cache
+	 */
+	private $cache;
+
+	/**
 	 * @var LoggerInterface $logger
 	 */
 	protected $logger;
 
 	/**
+	 * @param Cache $cache Redis cache
 	 * @param LoggerInterface $logger Log channel
 	 */
-	public function __construct( $logger = null ) {
+	public function __construct( $cache, $logger = null ) {
+		$this->cache = $cache;
 		$this->logger = $logger ?: new \Psr\Log\NullLogger();
 	}
 
@@ -89,32 +96,35 @@ class Tools {
 	 * @return array
 	 */
 	public function getActiveWebservices() {
-		// TODO: add caching for 5-10 minutes in redis
-		$services = [];
-		// FIXME: $active_proxy = file_get_contents( '/etc/active-proxy' );
-		$active_proxy = 'tools-proxy-01';
-		$proxy_uri = "http://{$active_proxy}:8081/list";
-
-		$client = new Client();
-		$response = $client->get( $proxy_uri );
-		$body = $response->getBody();
-		$json = json_decode( $body, true );
-		if ( $json ) {
-			$proxies = json_decode( $body, true );
-			foreach ( $proxies as $key => $value ) {
-				if (
-					array_key_exists( 'status', $value ) &&
-					$value['status'] == 'active'
-				) {
-					$services[$key] = 1;
+		$key = 'tools:active';
+		$services = $this->cache->load( $key );
+		if ( !$services ) {
+			// FIXME: $active_proxy = file_get_contents( '/etc/active-proxy' );
+			$active_proxy = 'tools-proxy-01';
+			$proxy_uri = "http://{$active_proxy}:8081/list";
+			$client = new Client();
+			$response = $client->get( $proxy_uri );
+			$body = $response->getBody();
+			$json = json_decode( $body, true );
+			if ( $json ) {
+				$proxies = json_decode( $body, true );
+				foreach ( $proxies as $key => $value ) {
+					if (
+						array_key_exists( 'status', $value ) &&
+						$value['status'] == 'active'
+					) {
+						$services[$key] = 1;
+					}
 				}
+				$this->cache->save( $key, $services, 600 );
+			} else {
+				$this->logger->error( 'Error fetching webproxy status data', [
+					'method' => __METHOD__,
+					'status' => $response->getStatusCode(),
+					'body' => $body,
+				] );
+				$services = [];
 			}
-		} else {
-			$this->logger->error( 'Error fetching webproxy status data', [
-				'method' => __METHOD__,
-				'status' => $response->getStatusCode(),
-				'body' => $body,
-			] );
 		}
 		return $services;
 	}

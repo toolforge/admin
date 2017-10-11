@@ -110,7 +110,7 @@ class App extends AbstractApp {
 		} );
 
 		$container->singleton( 'tools', function ( $c ) {
-			return new Tools( $c->log );
+			return new Tools( $c->cache, $c->log );
 		} );
 
 		$container->singleton( 'purifierConfig', function ( $c ) {
