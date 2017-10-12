@@ -9,8 +9,9 @@ h2 {
   padding:0 0 .5em 0;
 }
 
-.card-group .toolinfo {
+.card-deck .toolinfo {
   min-width:300px;
+  margin:5px;
 }
 .toolinfo .card-body {
   padding-top:0.25em;
