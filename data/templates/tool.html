@@ -31,6 +31,13 @@
         <div class="card-text">
           {{ info.description|default('No .description or toolinfo.json found')|purify }}
         </div>
+        {% if info.keywords %}
+        <div class="card-text">
+          {% for word in info.keywords %}
+          <span class="keyword">{{ word }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
         {% if info.author or info.repository %}
         <dl class="row small">
           {% if info.author %}

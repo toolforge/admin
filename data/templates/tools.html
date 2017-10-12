@@ -31,6 +31,13 @@
         Tool: <a href="{{ urlFor('tool', {'name': tool.name}) }}">{{ tool.name }}</a>
       </h6>
       <div class="card-text">{{ info.description|purify }}</div>
+      {% if info.keywords %}
+      <div class="card-text">
+        {% for word in info.keywords %}
+        <span class="keyword">{{ word }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
       <dl class="row small">
         {% if info.author %}
         <dt class="col-md-4">Author</dt>
