@@ -53,7 +53,7 @@ class LabsDao extends AbstractDao {
 	}
 
 	public function getAllTools() {
-		$key = 'labsdb:alltools';
+		$key = 'labsdb:alltools:v4';
 		$tools = $this->cache->load( $key );
 		if ( !$tools ) {
 			$records = $this->fetchAll(
@@ -83,13 +83,22 @@ class LabsDao extends AbstractDao {
 	}
 
 	protected function toolsRowToArray( $row ) {
+		$row['maintainers'] = explode( ' ', $row['maintainers'] );
+		sort( $row['maintainers'] );
 		$info = $this->toolinfo->getInfo( $row['name'] );
 		if ( !$info ) {
 			$info = [ [
 				'name' => $row['name'],
 				'title' => $row['name'],
 				'description' => $row['description'],
+				'keywords' => [],
+				'author' => [],
 			] ];
+		}
+		foreach ( $info as $idx => $i ) {
+			$info[$idx]['maintainers'] = $row['maintainers'];
+			$info[$idx]['fulltext'] = $this->makeFulltext(
+				$i, $row['maintainers'] );
 		}
 		usort( $info, function ( $a, $b ) {
 			$an = $a['title'] ?: $a['name'];
@@ -97,8 +106,17 @@ class LabsDao extends AbstractDao {
 			return strcmp( $an, $bn );
 		} );
 		$row['toolinfo'] = $info;
-		$row['maintainers'] = explode( ' ', $row['maintainers'] );
-		sort( $row['maintainers'] );
 		return $row;
+	}
+
+	protected function makeFulltext( $tool, $maintainers ) {
+		$ft = [];
+		foreach ( [ 'name', 'title', 'description' ] as $i ) {
+			$ft[] = $tool[$i];
+		}
+		$ft = array_merge( $ft, $tool['keywords'] );
+		$ft = array_merge( $ft, $tool['author'] );
+		$ft = array_merge( $ft, $maintainers );
+		return strtolower( trim( implode( ' ', $ft ) ) );
 	}
 }

@@ -41,8 +41,8 @@
         {% if info.author or info.repository %}
         <dl class="row small">
           {% if info.author %}
-          <dt class="col-md-4">Author</dt>
-          <dd class="col-md-8 pl-0">
+          <dt class="col-md-3">Author</dt>
+          <dd class="col-md-9 pl-0">
             <ul class="list-inline">
               {% for author in info.author %}
               <li class="list-inline-item">{{ author|purify }}</li>
@@ -51,8 +51,8 @@
           </dd>
           {% endif %}
           {% if info.repository %}
-          <dt class="col-md-4">Source</dt>
-          <dd class="col-md-8">
+          <dt class="col-md-3">Source</dt>
+          <dd class="col-md-9 pl-0">
             <a href="{{ info.repository }}">{{ info.repository }}</a>
           </dd>
           {% endif %}
@@ -71,7 +71,7 @@
           {% if maintainer.gecos %}
           <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(maintainer.gecos) }}">{{ utils.ucfirst(maintainer.gecos) }}</a>
           {% else %}
-          {{- utils.ucfirst(maintainer.name) -}}
+          {{ utils.ucfirst(maintainer.name) }}
           {% endif %}
         </li>
         {% endfor %}

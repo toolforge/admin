@@ -32,6 +32,18 @@ h2 {
   white-space:nowrap;
 }
 
+#status, #search {
+  display:none;
+}
+
+a.search {
+  cursor:zoom-in;
+}
+a.search:hover {
+  text-decoration:none;
+  border-bottom:1px dotted #0056b3;
+}
+
 .tablesort th[role=columnheader]:not(.no-sort) {
   cursor: pointer;
 }

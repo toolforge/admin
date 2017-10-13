@@ -271,6 +271,13 @@ class App extends AbstractApp {
 					$page();
 				} )->name( 'tools' );
 
+				$slim->get( 'tools/search.js', function () use ( $slim ) {
+					$page = new Pages\ToolsJavascript( $slim );
+					$page->setI18nContext( $slim->i18nContext );
+					$page->setLabsDao( $slim->labsDao );
+					$page();
+				} )->name( 'toolsjs' );
+
 				$slim->get( 'tool/:name', function ( $name ) use ( $slim ) {
 					$page = new Pages\Tool( $slim );
 					$page->setI18nContext( $slim->i18nContext );

@@ -12,11 +12,27 @@
 </ol>
 
 <h1>{{ 'tools-header'|message }}</h1>
-
+<div id="status" class="alert alert-info" role="alert">
+  <button type="button" class="close all-toolinfo" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <p class="m-0 p-0"></p>
+</div>
+<form id="search">
+  <div class="form-group form-row">
+    <label for="q" class="col-sm-2 col-form-label">Search tools:</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" id="q">
+    </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-info all-toolinfo">All</button>
+    </div>
+  </div>
+</form>
 <div class="card-deck">
-  {% for tool in tools %}
-  {% for info in tool.toolinfo %}
-  <div class="card toolinfo">
+  {%- for tool in tools -%}
+  {%- for info in tool.toolinfo -%}
+  <div class="card toolinfo" data-tool="{{ info.name }}">
     <div class="card-body">
       <h4 class="card-title">
         {% if info.url %}
@@ -34,7 +50,7 @@
       {% if info.keywords %}
       <div class="card-text">
         {% for word in info.keywords %}
-        <span class="keyword">{{ word }}</span>
+        <span class="keyword"><a href="#!/keyword/{{ word }}" class="search">{{ word }}</a></span>
         {% endfor %}
       </div>
       {% endif %}
@@ -44,7 +60,7 @@
         <dd class="col-md-8 pl-0">
           <ul class="list-inline">
             {% for author in info.author %}
-            <li class="list-inline-item">{{ author|purify }}</li>
+            <li class="list-inline-item"><a href="#!/author/{{ author }}" class="search">{{ author }}</a></li>
             {% endfor %}
           </ul>
         </dd>
@@ -62,7 +78,7 @@
             {% if users[maintainer] %}
             {% set wiki_user = users[maintainer].wikitech %}
             <li class="list-inline-item">
-              <a href="https://wikitech.wikimedia.org/wiki/User:{{ utils.as_title(wiki_user) }}">{{ utils.ucfirst(wiki_user) }}</a>
+              <a href="#!/maintainer/{{maintainer}}" class="search">{{ utils.ucfirst(wiki_user) }}</a>
             </li>
             {% endif %}
             {% endfor %}
@@ -71,7 +87,12 @@
       </dl>
     </div>
   </div>
-  {% endfor %}
-  {% endfor %}
+  {%- endfor -%}
+  {%- endfor -%}
 </div>
 {% endblock content %}
+
+{% block javascript %}
+{{ parent() }}
+  <script src="{{ urlFor('toolsjs') }}"></script>
+{% endblock javascript %}
