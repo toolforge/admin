@@ -40,6 +40,14 @@
           <li class="nav-item {% block nav_li_oge_status %}{% endblock %}">
             <a class="nav-link" href="{{ urlFor('oge-status') }}">{{ 'nav-status'|message }}</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="nb-seealso" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ 'nav-seealso'|message }}</a>
+            <div class="dropdown-menu" aria-labelledby="nb-seealso">
+              <a class="dropdown-item" href="https://tools.wmflabs.org/replag/">Wiki Replica replication lag</a>
+              <a class="dropdown-item" href="https://tools.wmflabs.org/tool-db-usage/">Usage of tool owned databases</a>
+              <a class="dropdown-item" href="https://tools.wmflabs.org/grid-jobs/">Grid jobs history</a>
+            </div>
+          </li>
         </ul>
         <ul class="navbar-nav ml-auto justify-content-end">
           <li class="nav-item {% block nav_li_rules %}{% endblock %}">
