@@ -245,9 +245,11 @@ class App extends AbstractApp {
 
 		$slim->group( '/',
 			function () use ( $slim ) {
+				// 86400 == 1 day
+				// 31536000 == 1 year
 				$slim->response->headers->set(
 					'Strict-Transport-Security',
-					'max-age:31536000; includeSubDomains; preload' );
+					'max-age:86400; includeSubDomains; preload' );
 			},
 			function () use ( $slim ) {
 				if ( $slim->environment['slim.url_scheme'] !== 'https' ) {
