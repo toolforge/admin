@@ -99,8 +99,10 @@ class Tools {
 		$key = 'tools:active';
 		$services = $this->cache->load( $key );
 		if ( !$services ) {
-			// FIXME: $active_proxy = file_get_contents( '/etc/active-proxy' );
-			$active_proxy = 'tools-proxy-01';
+			// FIXME: /etc/active-proxy is not exposed to Kubernetes
+			// containers.
+			// $active_proxy = file_get_contents( '/etc/active-proxy' );
+			$active_proxy = 'tools-proxy-03';
 			$proxy_uri = "http://{$active_proxy}:8081/list";
 			$client = new Client();
 			$response = $client->get( $proxy_uri );
