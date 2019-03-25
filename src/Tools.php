@@ -35,7 +35,7 @@ class Tools {
 
 	/**
 	 * @param Cache $cache Redis cache
-	 * @param LoggerInterface $logger Log channel
+	 * @param LoggerInterface|null $logger Log channel
 	 */
 	public function __construct( $cache, $logger = null ) {
 		$this->cache = $cache;
@@ -43,12 +43,12 @@ class Tools {
 	}
 
 	/**
-	* Get information about a tool
-	*
-	* @param string $tool
-	* @return array name, list of maintainers, homedir. Name will be false if
-	*     tool is not valid.
-	*/
+	 * Get information about a tool
+	 *
+	 * @param string $tool
+	 * @return array name, list of maintainers, homedir. Name will be false if
+	 *     tool is not valid.
+	 */
 	public function getToolInfo( $tool ) {
 		$ret = [
 			'name' => false,

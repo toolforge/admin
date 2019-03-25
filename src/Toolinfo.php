@@ -43,7 +43,7 @@ class Toolinfo {
 	/**
 	 * @param string $uri Toolinfo endpoint
 	 * @param Cache $cache
-	 * @param LoggerInterface $logger Log channel
+	 * @param LoggerInterface|null $logger Log channel
 	 */
 	public function __construct( $uri, $cache, $logger = null ) {
 		$this->logger = $logger ?: new \Psr\Log\NullLogger();

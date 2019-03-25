@@ -1,3 +1,5 @@
 /.env
+/.php-version
+/.phpunit.result.cache
 /data/cache
 /vendor

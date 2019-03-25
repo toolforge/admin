@@ -175,7 +175,7 @@ class App extends AbstractApp {
 	}
 
 	/**
-	 * @inherit
+	 * @inheritDoc
 	 */
 	protected function configureHeaderMiddleware() {
 		$headers = parent::configureHeaderMiddleware();
