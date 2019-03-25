@@ -41,9 +41,6 @@ class App extends AbstractApp {
 		}
 
 		$slim->config( [
-			'qstat.uri' => Config::getStr( 'QSTAT_URI',
-				'https://tools.wmflabs.org/gridengine-status'
-			),
 			'db.dsn' => Config::getStr( 'DB_DSN',
 				'mysql:host=tools.labsdb;dbname=toollabs_p'
 			),
@@ -55,6 +52,9 @@ class App extends AbstractApp {
 			'redis.host' => Config::getStr( 'REDIS_HOST', 'tools-redis' ),
 			'toolinfo.uri' => Config::getStr( 'TOOLINFO_URI',
 				'https://tools.wmflabs.org/hay/directory/api.php'
+			),
+			'tools.base' => Config::getStr( 'TOOLS_BASE',
+				'https://tools.wmflabs.org/'
 			),
 		] );
 
@@ -106,10 +106,6 @@ class App extends AbstractApp {
 			return new I18nContext(
 				$c->i18nCache, $c->settings['i18n.default'], $c->log
 			);
-		} );
-
-		$container->singleton( 'qstat', function ( $c ) {
-			return new Qstat( $c->settings['qstat.uri'], $c->log );
 		} );
 
 		$container->singleton( 'tools', function ( $c ) {
@@ -307,10 +303,9 @@ class App extends AbstractApp {
 				} )->name( 'wiki' );
 
 				$slim->get( 'oge/status', function () use ( $slim ) {
-					$page = new Pages\OgeStatus( $slim );
-					$page->setI18nContext( $slim->i18nContext );
-					$page->setQstat( $slim->qstat );
-					$page();
+					$page = new Pages\Redirect( $slim );
+					$page->setBaseUrl( $slim->config( 'tools.base' ) );
+					$page( 'sge-jobs/' );
 				} )->name( 'oge-status' );
 			}
 		); // end group '/'
