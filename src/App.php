@@ -241,20 +241,6 @@ class App extends AbstractApp {
 
 		$slim->group( '/',
 			function () use ( $slim ) {
-				// 86400 == 1 day
-				// 31536000 == 1 year
-				$slim->response->headers->set(
-					'Strict-Transport-Security',
-					'max-age=86400; includeSubDomains' );
-			},
-			function () use ( $slim ) {
-				if ( $slim->environment['slim.url_scheme'] !== 'https' ) {
-					$host = $slim->request->getHost();
-					$uri = getenv( 'HTTP_X_ORIGINAL_URI' );
-					$slim->redirect( "https://{$host}{$uri}", 301 );
-				}
-			},
-			function () use ( $slim ) {
 				$slim->get( '', function () use ( $slim ) {
 					$slim->render( 'splash.html' );
 				} )->name( 'splash' );
