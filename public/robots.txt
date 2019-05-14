@@ -9,6 +9,10 @@ Disallow: /persondata/
 # T122327
 Disallow: /xtools-articleinfo/
 
+# T222684
+Disallow: /wsexport/
+Disallow: /wsexport-test/
+
 # Disallow XoviBot.
 User-agent: XoviBot
 Disallow: /
