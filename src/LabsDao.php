@@ -33,8 +33,8 @@ class LabsDao extends AbstractDao {
 		$dsn, $user, $pass, $cache, $toolinfo, $logger = null
 	) {
 		parent::__construct( $dsn, $user, $pass, $logger );
-		// FIXME: Horrible hack for T164971
-		$this->dbh->exec( 'set names latin1' );
+		// T164971
+		$this->dbh->exec( 'set names utf8mb4' );
 		$this->cache = $cache;
 		$this->toolinfo = $toolinfo;
 	}
