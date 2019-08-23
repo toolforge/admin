@@ -10,11 +10,11 @@
 <h2>If you have reached this page from somewhere else...</h2>
 <p>This URI is part of the <a href="{{ urlFor('tool', {'name': tool}) }}"><code>{{ tool }}</code></a> tool, maintained by {{ utils.printMaintainers( maintainers ) }}.</p>
 <p>Perhaps its magical script elves are temporarily ill, or the link you've followed doesn't actually lead somewhere useful?<p>
-<p>If you're pretty sure this shouldn't be an error, you may wish to notify the tool's maintainers (above) about the error and how you ended up here.</p>
+<p>If you're pretty sure this shouldn't be an error, you may wish to notify the tool's maintainers (they are listed above) about the error and how you ended up here.</p>
 <h2>If you maintain this tool</h2>
 <p>The error might be caused by incorrect permission, or by an error in the script or CGI that was meant to execute here. Please check the error logs for your web service.</p>
 {% else %}
-<p>Perhaps the webserver has temporarily lost its mind, or the link you've followed doesn't actually lead somewhere useful?</p>
+<p>Perhaps the webserver has temporarily become confused, or the link you've followed doesn't actually lead somewhere useful?</p>
 <p>If you're pretty sure this shouldn't be an error, you may wish to notify the <a href="{{ urlFor('tool', {'name': 'admin'}) }}">project administrators</a> about the error and how you ended up here.</p>
 {% endif %}
 {% endblock content %}
