@@ -102,7 +102,8 @@ class Tools {
 			// FIXME: /etc/active-proxy is not exposed to Kubernetes
 			// containers.
 			// $active_proxy = file_get_contents( '/etc/active-proxy' );
-			$active_proxy = 'tools-proxy-03';
+			// Split horizon DNS should take us where we need to go
+			$active_proxy = 'tools.wmflabs.org';
 			$proxy_uri = "http://{$active_proxy}:8081/list";
 			$client = new Client();
 			$response = $client->get( $proxy_uri );
