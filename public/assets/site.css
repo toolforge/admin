@@ -77,3 +77,7 @@ a.search:hover {
   visibility: visible;
   opacity: 1;
 }
+
+.media {
+  flex-wrap: wrap;
+}
