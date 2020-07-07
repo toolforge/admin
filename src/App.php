@@ -51,7 +51,7 @@ class App extends AbstractApp {
 			),
 			'redis.host' => Config::getStr( 'REDIS_HOST', 'tools-redis' ),
 			'toolinfo.uri' => Config::getStr( 'TOOLINFO_URI',
-				'https://tools.wmflabs.org/hay/directory/api.php'
+				'https://hay.toolforge.org/directory/api.php'
 			),
 			'tools.base' => Config::getStr( 'TOOLS_BASE',
 				'https://tools.wmflabs.org/'
