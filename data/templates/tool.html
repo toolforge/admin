@@ -23,7 +23,7 @@
           {% if info.url %}
           <a href="{{ info.url }}">{{ info.title|default(tool.name) }}</a>
           {% elseif tool.toolinfo|length == 1 and active %}
-          <a href="/{{ tool.name }}/">{{ tool.name }}</a>
+          <a href="https://{{ tool.name }}.toolforge.org/">{{ tool.name }}</a>
           {% else %}
           {{ info.title|default(tool.name) }}
           {% endif %}
