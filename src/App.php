@@ -53,9 +53,6 @@ class App extends AbstractApp {
 			'toolinfo.uri' => Config::getStr( 'TOOLINFO_URI',
 				'https://hay.toolforge.org/directory/api.php'
 			),
-			'tools.base' => Config::getStr( 'TOOLS_BASE',
-				'https://tools.wmflabs.org/'
-			),
 		] );
 
 		$slim->configureMode( 'production', function () use ( $slim ) {
@@ -120,8 +117,6 @@ class App extends AbstractApp {
 		$container->singleton( 'purifierConfig', function ( $c ) {
 			$config = \HTMLPurifier_Config::createDefault();
 			$config->set( 'HTML.Doctype', 'HTML 4.01 Transitional' );
-			$config->set( 'URI.Base', 'https://tools.wmflabs.org' );
-			$config->set( 'URI.MakeAbsolute', true );
 			$config->set( 'URI.DisableExternalResources', true );
 			// Strip all css
 			$config->set( 'HTML.ForbiddenAttributes', [ '*@style' ] );
@@ -290,8 +285,8 @@ class App extends AbstractApp {
 
 				$slim->get( 'oge/status', function () use ( $slim ) {
 					$page = new Pages\Redirect( $slim );
-					$page->setBaseUrl( $slim->config( 'tools.base' ) );
-					$page( 'sge-jobs/' );
+					$page->setBaseUrl( 'https://sge-jobs.toolforge.org' );
+					$page( '/' );
 				} )->name( 'oge-status' );
 			}
 		); // end group '/'

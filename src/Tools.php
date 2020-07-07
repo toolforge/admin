@@ -103,7 +103,7 @@ class Tools {
 			// containers.
 			// $active_proxy = file_get_contents( '/etc/active-proxy' );
 			// Split horizon DNS should take us where we need to go
-			$active_proxy = 'tools.wmflabs.org';
+			$active_proxy = 'admin.toolforge.org';
 			$proxy_uri = "http://{$active_proxy}:8081/list";
 			$client = new Client();
 			$response = $client->get( $proxy_uri );

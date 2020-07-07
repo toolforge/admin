@@ -1,7 +1,7 @@
 {
 	"name": "tools/admin",
 	"license": "GPL-3.0+",
-	"homepage": "https://tools.wmflabs.org/",
+	"homepage": "https://toolforge.org/",
 	"require": {
 		"ext-redis": ">=2.0",
 		"ezyang/htmlpurifier": "~4.7",
