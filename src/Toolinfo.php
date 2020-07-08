@@ -112,7 +112,7 @@ class Toolinfo {
 				}
 			} elseif ( false !== strpos( $info['url'], 'toolforge.org' ) ) {
 				preg_match(
-					'#^(https?:)?//([^.]+).toolforge.org/.*#',
+					'#^(https?:)?//([^.]+).toolforge.org.*#',
 					$info['url'],
 					$m
 				);
