@@ -95,38 +95,47 @@ class Toolinfo {
 					$info['url'],
 					$m
 				);
-				$tool = $m[2];
-				if ( !array_key_exists( $tool, $toolinfo ) ) {
-					$toolinfo[$tool] = [];
+				if ( isset( $m[2] ) ) {
+					$tool = $m[2];
+					if ( !array_key_exists( $tool, $toolinfo ) ) {
+						$toolinfo[$tool] = [];
+					}
+					$toolinfo[$tool][] = [
+						'name' => $info['name'],
+						'title' => $info['title'],
+						'description' => $info['description'],
+						'url' => $info['url'],
+						'keywords' => static::aGet( 'keywords', $info ),
+						'author' => static::aGet( 'author', $info ),
+						'repository' => static::aGet( 'repository', $info ),
+					];
 				}
-				$toolinfo[$tool][] = [
-					'name' => $info['name'],
-					'title' => $info['title'],
-					'description' => $info['description'],
-					'url' => $info['url'],
-					'keywords' => static::aGet( 'keywords', $info ),
-					'author' => static::aGet( 'author', $info ),
-					'repository' => static::aGet( 'repository', $info ),
-				];
 			} elseif ( false !== strpos( $info['url'], 'toolforge.org' ) ) {
 				preg_match(
 					'#^(https?:)?//([^.]+).toolforge.org/.*#',
 					$info['url'],
 					$m
 				);
-				$tool = $m[2];
-				if ( !array_key_exists( $tool, $toolinfo ) ) {
-					$toolinfo[$tool] = [];
+				if ( isset( $m[2] ) ) {
+					$tool = $m[2];
+					if ( !array_key_exists( $tool, $toolinfo ) ) {
+						$toolinfo[$tool] = [];
+					}
+					$toolinfo[$tool][] = [
+						'name' => $info['name'],
+						'title' => $info['title'],
+						'description' => $info['description'],
+						'url' => $info['url'],
+						'keywords' => static::aGet( 'keywords', $info ),
+						'author' => static::aGet( 'author', $info ),
+						'repository' => static::aGet( 'repository', $info ),
+					];
+				} else {
+					$this->logger->warning(
+						"Failed to guess toolname from {$info['url']}",
+						[ 'toolinfo' => $info ]
+					);
 				}
-				$toolinfo[$tool][] = [
-					'name' => $info['name'],
-					'title' => $info['title'],
-					'description' => $info['description'],
-					'url' => $info['url'],
-					'keywords' => static::aGet( 'keywords', $info ),
-					'author' => static::aGet( 'author', $info ),
-					'repository' => static::aGet( 'repository', $info ),
-				];
 			}
 		}
 		return $toolinfo;
