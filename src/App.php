@@ -270,10 +270,8 @@ class App extends AbstractApp {
 				} )->name( 'toolsjs' );
 
 				$slim->get( 'tool/:name', function ( $name ) use ( $slim ) {
-					$page = new Pages\Tool( $slim );
-					$page->setI18nContext( $slim->i18nContext );
-					$page->setTools( $slim->tools );
-					$page->setLabsDao( $slim->labsDao );
+					$page = new Pages\Redirect( $slim );
+					$page->setBaseUrl( 'https://toolsadmin.wikimedia.org/tools/id/' );
 					$page( $name );
 				} )->name( 'tool' );
 

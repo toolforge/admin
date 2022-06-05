@@ -66,22 +66,6 @@ class LabsDao extends AbstractDao {
 		return $tools;
 	}
 
-	public function getTool( $name ) {
-		$key = "labsdb:tool:{$name}";
-		$tool = $this->cache->load( $key );
-		if ( !$tool ) {
-			$row = $this->fetch(
-				'SELECT * FROM tools WHERE name = ?',
-				[ $name ]
-			);
-			if ( $row ) {
-				$tool = $this->toolsRowToArray( $row );
-				$this->cache->save( $key, $tool, 900 );
-			}
-		}
-		return $tool;
-	}
-
 	protected function toolsRowToArray( $row ) {
 		$row['maintainers'] = explode( ' ', $row['maintainers'] );
 		sort( $row['maintainers'] );
