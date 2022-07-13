@@ -286,6 +286,11 @@ class App extends AbstractApp {
 					$page->setBaseUrl( 'https://sge-jobs.toolforge.org' );
 					$page( '/' );
 				} )->name( 'oge-status' );
+
+				$slim->get( 'healthz', function () use ( $slim ) {
+					$page = new Pages\Healthz();
+					$page();
+				} )->name( 'healthz' );
 			}
 		); // end group '/'
 
