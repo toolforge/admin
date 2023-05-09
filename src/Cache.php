@@ -31,7 +31,9 @@ class Cache {
 	 */
 	public function __construct( $host, $port = 6379 ) {
 		$this->redis = new Redis();
-		$this->redis->connect( $host, $port );
+		$this->redis->connect( $host, $port, 2 );
+		$this->redis->setOption(
+			Redis::OPT_READ_TIMEOUT, 2 );
 		$this->redis->setOption(
 			Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE );
 		$u = posix_getpwuid( getmyuid() );
