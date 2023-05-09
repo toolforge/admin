@@ -46,9 +46,6 @@ class App extends AbstractApp {
 			),
 			'db.user' => Config::getStr( 'DB_USER', $mycnf['user'] ),
 			'db.pass' => Config::getStr( 'DB_PASS', $mycnf['password'] ),
-			'wiki.base' => Config::getStr( 'WIKI_BASE',
-				'https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/'
-			),
 			'redis.host' => Config::getStr( 'REDIS_HOST', 'tools-redis' ),
 			'toolinfo.uri' => Config::getStr( 'TOOLINFO_URI',
 				'https://hay.toolforge.org/directory/api.php'
@@ -270,12 +267,6 @@ class App extends AbstractApp {
 					$page->setBaseUrl( 'https://toolsadmin.wikimedia.org/tools/id/' );
 					$page( $name );
 				} )->name( 'tool' );
-
-				$slim->get( 'wiki/:name', function ( $name ) use ( $slim ) {
-					$page = new Pages\Redirect( $slim );
-					$page->setBaseUrl( $slim->config( 'wiki.base' ) );
-					$page( $name );
-				} )->name( 'wiki' );
 
 				$slim->get( 'oge/status', function () use ( $slim ) {
 					$page = new Pages\Redirect( $slim );
