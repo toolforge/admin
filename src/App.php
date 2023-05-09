@@ -105,10 +105,6 @@ class App extends AbstractApp {
 			);
 		} );
 
-		$container->singleton( 'tools', function ( $c ) {
-			return new Tools( $c->cache, $c->log );
-		} );
-
 		$container->singleton( 'toolinfo', function ( $c ) {
 			return new Toolinfo(
 				$c->settings['toolinfo.uri'], $c->cache, $c->log );

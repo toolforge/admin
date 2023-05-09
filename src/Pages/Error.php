@@ -45,30 +45,9 @@ class Error extends Controller {
 	protected function handleGet( $errorCode, $notFoundHandler = false ) {
 		$env = \Slim\Environment::getInstance();
 		$uri = $env['HTTP_X_ORIGINAL_URI'] ?: $env['PATH_INFO'];
-		if ( preg_match( '@^/([^/]+)/@', $uri, $match ) ) {
-			$info = $this->tools->getToolInfo( $match[1] );
-
-			if ( $notFoundHandler && $info['name'] !== false ) {
-				// Route was for a known tool
-				if ( $uri === "/{$info['name']}" ) {
-					// Redirect bare /<toolname> to /<toolname>
-					$this->redirect( "/{$info['name']}/", 301 );
-				} else {
-					// The tool's service must be down. Send a 503 response.
-					$errorCode = '503';
-				}
-			}
-		} else {
-			$info = [
-				'name' => false,
-				'maintainers' => []
-			];
-		}
 
 		$httpStatus = $notFoundHandler ? (int)$errorCode : 200;
 		$this->view->set( 'uri', $uri );
-		$this->view->set( 'tool', $info['name'] );
-		$this->view->set( 'maintainers', $info['maintainers'] );
 		$this->render( "errors/{$errorCode}.html", [], $httpStatus );
 	}
 }
