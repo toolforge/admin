@@ -90,45 +90,4 @@ class Tools {
 		}
 		return $ret;
 	}
-
-	/**
-	 * Get list of currently active webservices.
-	 * @return array
-	 */
-	public function getActiveWebservices() {
-		$key = 'tools:active';
-		$services = $this->cache->load( $key );
-		if ( !$services ) {
-			// FIXME: /etc/active-proxy is not exposed to Kubernetes
-			// containers.
-			// $active_proxy = file_get_contents( '/etc/active-proxy' );
-			// Split horizon DNS should take us where we need to go
-			$active_proxy = 'admin.toolforge.org';
-			$proxy_uri = "http://{$active_proxy}:8081/list";
-			$client = new Client();
-			$response = $client->get( $proxy_uri );
-			$body = $response->getBody();
-			$json = json_decode( $body, true );
-			if ( $json ) {
-				$proxies = json_decode( $body, true );
-				foreach ( $proxies as $key => $value ) {
-					if (
-						array_key_exists( 'status', $value ) &&
-						$value['status'] == 'active'
-					) {
-						$services[$key] = 1;
-					}
-				}
-				$this->cache->save( $key, $services, 600 );
-			} else {
-				$this->logger->error( 'Error fetching webproxy status data', [
-					'method' => __METHOD__,
-					'status' => $response->getStatusCode(),
-					'body' => $body,
-				] );
-				$services = [];
-			}
-		}
-		return $services;
-	}
 }

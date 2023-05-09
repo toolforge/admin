@@ -50,11 +50,9 @@ class Tools extends Controller {
 	}
 
 	protected function handleGet() {
-		$active = $this->tools->getActiveWebservices();
 		$users = $this->labsDao->getAllUsers();
 		$tools = $this->labsDao->getAllTools();
 
-		$this->view->set( 'active', $active );
 		$this->view->set( 'users', $users );
 		$this->view->set( 'tools', $tools );
 		$this->render( 'tools.html' );
