@@ -236,7 +236,6 @@ class App extends AbstractApp {
 				$slim->get( 'error/:errorCode', function ( $errorCode ) use ( $slim ) {
 					$page = new Pages\Error( $slim );
 					$page->setI18nContext( $slim->i18nContext );
-					$page->setTools( $slim->tools );
 					$page( $errorCode );
 				} )->name( 'error' );
 
@@ -250,7 +249,6 @@ class App extends AbstractApp {
 				$slim->get( 'tools', function () use ( $slim ) {
 					$page = new Pages\Tools( $slim );
 					$page->setI18nContext( $slim->i18nContext );
-					$page->setTools( $slim->tools );
 					$page->setLabsDao( $slim->labsDao );
 					$page();
 				} )->name( 'tools' );
@@ -284,7 +282,6 @@ class App extends AbstractApp {
 		$slim->notFound( function () use ( $slim ) {
 			$page = new Pages\Error( $slim );
 			$page->setI18nContext( $slim->i18nContext );
-			$page->setTools( $slim->tools );
 			$page( '404', true );
 		} );
 	}

@@ -26,18 +26,6 @@ use Wikimedia\Slimapp\Controller;
  */
 class Error extends Controller {
 	/**
-	 * @var \Tools\Admin\Tools $tools
-	 */
-	protected $tools;
-
-	/**
-	 * @param \Tools\Admin\Tools $tools
-	 */
-	public function setTools( $tools ) {
-		$this->tools = $tools;
-	}
-
-	/**
 	 * @param string $errorCode HTTP error code
 	 * @param bool $notFoundHandler Are we being called as the notFound
 	 *   handler for the app?

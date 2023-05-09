@@ -26,21 +26,9 @@ use Wikimedia\Slimapp\Controller;
  */
 class Tools extends Controller {
 	/**
-	 * @var \Tools\Admin\Tools $tools
-	 */
-	protected $tools;
-
-	/**
 	 * @var \Tools\Admin\LabsDao $labsDao
 	 */
 	protected $labsDao;
-
-	/**
-	 * @param \Tools\Admin\Tools $tools
-	 */
-	public function setTools( $tools ) {
-		$this->tools = $tools;
-	}
 
 	/**
 	 * @param \Tools\Admin\LabsDao $dao
