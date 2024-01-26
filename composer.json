@@ -31,10 +31,18 @@
 		"preferred-install": "dist"
 	},
 	"scripts": {
-		"lint": "parallel-lint . --exclude vendor",
-		"phpcs": "phpcs",
-		"fix": "phpcbf",
-		"phpunit": "phpunit",
+		"lint": [
+			"parallel-lint . --exclude vendor"
+		],
+		"phpcs": [
+			"phpcs"
+		],
+		"fix": [
+			"phpcbf"
+		],
+		"phpunit": [
+			"phpunit"
+		],
 		"test": [
 			"composer lint",
 			"composer phpunit",
