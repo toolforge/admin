@@ -29,12 +29,12 @@ use Twig_SimpleFilter;
 class HtmlPurifierExtension extends Twig_Extension {
 
 	/**
-	 * @var Set $container
+	 * @var Set
 	 */
 	protected $container;
 
 	/**
-	 * @var string $member
+	 * @var string
 	 */
 	protected $member;
 

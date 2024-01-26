@@ -23,29 +23,18 @@ use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 
 class Toolinfo {
-	/**
-	 * @var LoggerInterface $logger
-	 */
-	protected $logger;
+	protected LoggerInterface $logger;
+	protected string $uri;
+	private Cache $cache;
 
-	/**
-	 * @var string $uri
-	 */
-	protected $uri;
-
-	/**
-	 * @var Cache $cache
-	 */
-	private $cache;
-
-	private $info;
+	private ?array $info = null;
 
 	/**
 	 * @param string $uri Toolinfo endpoint
 	 * @param Cache $cache
 	 * @param LoggerInterface|null $logger Log channel
 	 */
-	public function __construct( $uri, $cache, $logger = null ) {
+	public function __construct( string $uri, Cache $cache, LoggerInterface $logger = null ) {
 		$this->logger = $logger ?: new \Psr\Log\NullLogger();
 		$this->uri = $uri;
 		$this->cache = $cache;
@@ -56,14 +45,14 @@ class Toolinfo {
 	 * @param string $tool
 	 * @return array
 	 */
-	public function getInfo( $tool ) {
+	public function getInfo( string $tool ): array {
 		if ( $this->info === null ) {
 			$this->info = $this->fetchInfo();
 		}
-		return static::aGet( $tool, $this->info, [] );
+		return $this->info[$tool] ?? [];
 	}
 
-	private function fetchInfo() {
+	private function fetchInfo(): array {
 		$key = 'toolinfo:info';
 		$info = $this->cache->load( $key );
 		if ( !$info ) {
@@ -86,10 +75,10 @@ class Toolinfo {
 		return $info;
 	}
 
-	private function filterToolinfo( $raw ) {
+	private function filterToolinfo( array $raw ): array {
 		$toolinfo = [];
 		foreach ( $raw as $info ) {
-			if ( false !== strpos( $info['url'], 'tools.wmflabs.org' ) ) {
+			if ( strpos( $info['url'], 'tools.wmflabs.org' ) !== false ) {
 				preg_match(
 					'#^(https?:)?//tools.wmflabs.org/([^/]+).*#',
 					$info['url'],
@@ -105,12 +94,12 @@ class Toolinfo {
 						'title' => $info['title'],
 						'description' => $info['description'],
 						'url' => $info['url'],
-						'keywords' => static::aGet( 'keywords', $info ),
-						'author' => static::aGet( 'author', $info ),
-						'repository' => static::aGet( 'repository', $info ),
+						'keywords' => $info['keywords'] ?? null,
+						'author' => $info['author'] ?? null,
+						'repository' => $info['repository'] ?? null,
 					];
 				}
-			} elseif ( false !== strpos( $info['url'], 'toolforge.org' ) ) {
+			} elseif ( strpos( $info['url'], 'toolforge.org' ) !== false ) {
 				preg_match(
 					'#^(https?:)?//([^.]+).toolforge.org.*#',
 					$info['url'],
@@ -126,9 +115,9 @@ class Toolinfo {
 						'title' => $info['title'],
 						'description' => $info['description'],
 						'url' => $info['url'],
-						'keywords' => static::aGet( 'keywords', $info ),
-						'author' => static::aGet( 'author', $info ),
-						'repository' => static::aGet( 'repository', $info ),
+						'keywords' => $info['keywords'] ?? null,
+						'author' => $info['author'] ?? null,
+						'repository' => $info['repository'] ?? null,
 					];
 				} else {
 					$this->logger->warning(
@@ -139,9 +128,5 @@ class Toolinfo {
 			}
 		}
 		return $toolinfo;
-	}
-
-	private static function aGet( $key, $arr, $default = null ) {
-		return array_key_exists( $key, $arr ) ? $arr[$key] : $default;
 	}
 }

@@ -26,7 +26,7 @@ use Wikimedia\Slimapp\Controller;
  */
 class Redirect extends Controller {
 	/**
-	 * @var string $baseUrl
+	 * @var string
 	 */
 	protected $baseUrl;
 

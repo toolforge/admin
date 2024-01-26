@@ -22,14 +22,14 @@ namespace Tools\Admin;
 use Redis;
 
 class Cache {
-	private $redis;
-	private $prefix;
+	private Redis $redis;
+	private string $prefix;
 
 	/**
 	 * @param string $host
 	 * @param int $port
 	 */
-	public function __construct( $host, $port = 6379 ) {
+	public function __construct( string $host, int $port = 6379 ) {
 		$this->redis = new Redis();
 		$this->redis->connect( $host, $port, 2 );
 		$this->redis->setOption(
@@ -40,7 +40,7 @@ class Cache {
 		$this->prefix = sha1( "{$u['name']}.{$u['dir']}" );
 	}
 
-	private function key( $val ) {
+	private function key( string $val ): string {
 		return "{$this->prefix}:{$val}";
 	}
 

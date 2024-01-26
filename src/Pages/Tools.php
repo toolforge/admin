@@ -26,7 +26,7 @@ use Wikimedia\Slimapp\Controller;
  */
 class Tools extends Controller {
 	/**
-	 * @var \Tools\Admin\LabsDao $labsDao
+	 * @var \Tools\Admin\LabsDao
 	 */
 	protected $labsDao;
 

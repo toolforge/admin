@@ -1,12 +1,13 @@
 {
 	"name": "tools/admin",
-	"license": "GPL-3.0+",
+	"description": "Toolforge admin console",
+	"license": "GPL-3.0-or-later",
 	"homepage": "https://toolforge.org/",
 	"require": {
+		"php": "^8.2",
 		"ext-redis": ">=2.0",
 		"ezyang/htmlpurifier": "~4.7",
 		"guzzlehttp/guzzle": "~6.0",
-		"php": ">=7.2",
 		"wikimedia/slimapp": "dev-master"
 	},
 	"autoload": {
@@ -15,9 +16,9 @@
 		}
 	},
 	"require-dev": {
-		"jakub-onderka/php-parallel-lint": "~1.0",
+		"php-parallel-lint/php-parallel-lint": "1.3.2",
 		"phpunit/phpunit": "~8.0",
-		"mediawiki/mediawiki-codesniffer": "24.0.0"
+		"mediawiki/mediawiki-codesniffer": "42.0.0"
 	},
 	"autoload-dev": {
 		"psr-4": {

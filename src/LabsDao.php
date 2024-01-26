@@ -19,6 +19,7 @@
 
 namespace Tools\Admin;
 
+use Psr\Log\LoggerInterface;
 use Wikimedia\Slimapp\Dao\AbstractDao;
 
 /**
@@ -26,11 +27,11 @@ use Wikimedia\Slimapp\Dao\AbstractDao;
  */
 class LabsDao extends AbstractDao {
 
-	private $cache;
-	private $toolinfo;
+	private Cache $cache;
+	private Toolinfo $toolinfo;
 
 	public function __construct(
-		$dsn, $user, $pass, $cache, $toolinfo, $logger = null
+		string $dsn, string $user, string $pass, Cache $cache, Toolinfo $toolinfo, ?LoggerInterface $logger = null
 	) {
 		parent::__construct( $dsn, $user, $pass, $logger );
 		// T164971
@@ -84,7 +85,7 @@ class LabsDao extends AbstractDao {
 			$info[$idx]['fulltext'] = $this->makeFulltext(
 				$i, $row['maintainers'] );
 		}
-		usort( $info, function ( $a, $b ) {
+		usort( $info, static function ( $a, $b ) {
 			$an = $a['title'] ?: $a['name'];
 			$bn = $b['title'] ?: $b['name'];
 			return strcmp( $an, $bn );

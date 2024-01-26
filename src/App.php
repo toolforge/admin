@@ -52,14 +52,14 @@ class App extends AbstractApp {
 			),
 		] );
 
-		$slim->configureMode( 'production', function () use ( $slim ) {
+		$slim->configureMode( 'production', static function () use ( $slim ) {
 			$slim->config( [
 				'debug' => false,
 				'log.level' => Config::getStr( 'LOG_LEVEL', 'INFO' ),
 			] );
 
 			// Install a custom error handler
-			$slim->error( function ( \Exception $e ) use ( $slim ) {
+			$slim->error( static function ( \Exception $e ) use ( $slim ) {
 				$errorId = substr( session_id(), 0, 8 ) . '-' .
 					substr( uniqid(), -8 );
 				$slim->log->critical( $e->getMessage(), [
@@ -71,7 +71,7 @@ class App extends AbstractApp {
 			} );
 		} );
 
-		$slim->configureMode( 'development', function () use ( $slim ) {
+		$slim->configureMode( 'development', static function () use ( $slim ) {
 			$slim->config( [
 				'debug' => true,
 				'log.level' => Config::getStr( 'LOG_LEVEL', 'DEBUG' ),
@@ -86,28 +86,28 @@ class App extends AbstractApp {
 	 * @param \Slim\Helper\Set $container IOC container
 	 */
 	protected function configureIoc( \Slim\Helper\Set $container ) {
-		$container->singleton( 'cache', function ( $c ) {
+		$container->singleton( 'cache', static function ( $c ) {
 			return new Cache( $c->settings['redis.host'] );
 		} );
 
-		$container->singleton( 'i18nCache', function ( $c ) {
+		$container->singleton( 'i18nCache', static function ( $c ) {
 			return new JsonCache(
 				$c->settings['i18n.path'], $c->log
 			);
 		} );
 
-		$container->singleton( 'i18nContext', function ( $c ) {
+		$container->singleton( 'i18nContext', static function ( $c ) {
 			return new I18nContext(
 				$c->i18nCache, $c->settings['i18n.default'], $c->log
 			);
 		} );
 
-		$container->singleton( 'toolinfo', function ( $c ) {
+		$container->singleton( 'toolinfo', static function ( $c ) {
 			return new Toolinfo(
 				$c->settings['toolinfo.uri'], $c->cache, $c->log );
 		} );
 
-		$container->singleton( 'purifierConfig', function ( $c ) {
+		$container->singleton( 'purifierConfig', static function ( $c ) {
 			$config = \HTMLPurifier_Config::createDefault();
 			$config->set( 'HTML.Doctype', 'HTML 4.01 Transitional' );
 			$config->set( 'URI.DisableExternalResources', true );
@@ -116,11 +116,11 @@ class App extends AbstractApp {
 			$config->set( 'CSS.AllowedProperties', [] );
 		} );
 
-		$container->singleton( 'purifier', function ( $c ) {
+		$container->singleton( 'purifier', static function ( $c ) {
 			return new \HTMLPurifier( $c->purifierConfig );
 		} );
 
-		$container->singleton( 'labsDao', function ( $c ) {
+		$container->singleton( 'labsDao', static function ( $c ) {
 			return new LabsDao(
 				$c->settings['db.dsn'],
 				$c->settings['db.user'], $c->settings['db.pass'],
@@ -181,7 +181,7 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureRoutes( \Slim\Slim $slim ) {
-		$slim->hook( 'slim.before.router', function () use ( $slim ) {
+		$slim->hook( 'slim.before.router', static function () use ( $slim ) {
 			$env = $slim->environment;
 			$path = $env['PATH_INFO'];
 			$qs = $env['QUERY_STRING'];
@@ -228,58 +228,58 @@ class App extends AbstractApp {
 		}, 0 );
 
 		$slim->group( '/',
-			function () use ( $slim ) {
-				$slim->get( '', function () use ( $slim ) {
+			static function () use ( $slim ) {
+				$slim->get( '', static function () use ( $slim ) {
 					$slim->render( 'splash.html' );
 				} )->name( 'splash' );
 
-				$slim->get( 'error/:errorCode', function ( $errorCode ) use ( $slim ) {
+				$slim->get( 'error/:errorCode', static function ( $errorCode ) use ( $slim ) {
 					$page = new Pages\Error( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page( $errorCode );
 				} )->name( 'error' );
 
-				$slim->get( 'favicon.ico', function () use ( $slim ) {
+				$slim->get( 'favicon.ico', static function () use ( $slim ) {
 					$slim->redirect(
 						'https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico',
 						301
 					);
 				} )->name( 'favicon' );
 
-				$slim->get( 'tools', function () use ( $slim ) {
+				$slim->get( 'tools', static function () use ( $slim ) {
 					$page = new Pages\Tools( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setLabsDao( $slim->labsDao );
 					$page();
 				} )->name( 'tools' );
 
-				$slim->get( 'tools/search.js', function () use ( $slim ) {
+				$slim->get( 'tools/search.js', static function () use ( $slim ) {
 					$page = new Pages\ToolsJavascript( $slim );
 					$page->setI18nContext( $slim->i18nContext );
 					$page->setLabsDao( $slim->labsDao );
 					$page();
 				} )->name( 'toolsjs' );
 
-				$slim->get( 'tool/:name', function ( $name ) use ( $slim ) {
+				$slim->get( 'tool/:name', static function ( $name ) use ( $slim ) {
 					$page = new Pages\Redirect( $slim );
 					$page->setBaseUrl( 'https://toolsadmin.wikimedia.org/tools/id/' );
 					$page( $name );
 				} )->name( 'tool' );
 
-				$slim->get( 'oge/status', function () use ( $slim ) {
+				$slim->get( 'oge/status', static function () use ( $slim ) {
 					$page = new Pages\Redirect( $slim );
 					$page->setBaseUrl( 'https://sge-jobs.toolforge.org' );
 					$page( '/' );
 				} )->name( 'oge-status' );
 
-				$slim->get( 'healthz', function () use ( $slim ) {
+				$slim->get( 'healthz', static function () use ( $slim ) {
 					$page = new Pages\Healthz();
 					$page();
 				} )->name( 'healthz' );
 			}
 		); // end group '/'
 
-		$slim->notFound( function () use ( $slim ) {
+		$slim->notFound( static function () use ( $slim ) {
 			$page = new Pages\Error( $slim );
 			$page->setI18nContext( $slim->i18nContext );
 			$page( '404', true );
