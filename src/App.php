@@ -31,27 +31,6 @@ class App extends AbstractApp {
 	 * @param \Slim\Slim $slim Application
 	 */
 	protected function configureSlim( \Slim\Slim $slim ) {
-		// Load my.cnf if file exists
-		$mycnf_file = Config::getStr( 'MY_CNF',
-			"{$this->deployDir}/../replica.my.cnf" );
-		if ( is_readable( $mycnf_file ) ) {
-			$mycnf = parse_ini_file( $mycnf_file );
-		} else {
-			$mycnf = [ 'user' => '', 'password' => '', ];
-		}
-
-		$slim->config( [
-			'db.dsn' => Config::getStr( 'DB_DSN',
-				'mysql:host=tools.labsdb;dbname=toollabs_p'
-			),
-			'db.user' => Config::getStr( 'DB_USER', $mycnf['user'] ),
-			'db.pass' => Config::getStr( 'DB_PASS', $mycnf['password'] ),
-			'redis.host' => Config::getStr( 'REDIS_HOST', 'tools-redis' ),
-			'toolinfo.uri' => Config::getStr( 'TOOLINFO_URI',
-				'https://hay.toolforge.org/directory/api.php'
-			),
-		] );
-
 		$slim->configureMode( 'production', static function () use ( $slim ) {
 			$slim->config( [
 				'debug' => false,
@@ -86,10 +65,6 @@ class App extends AbstractApp {
 	 * @param \Slim\Helper\Set $container IOC container
 	 */
 	protected function configureIoc( \Slim\Helper\Set $container ) {
-		$container->singleton( 'cache', static function ( $c ) {
-			return new Cache( $c->settings['redis.host'] );
-		} );
-
 		$container->singleton( 'i18nCache', static function ( $c ) {
 			return new JsonCache(
 				$c->settings['i18n.path'], $c->log
@@ -99,34 +74,6 @@ class App extends AbstractApp {
 		$container->singleton( 'i18nContext', static function ( $c ) {
 			return new I18nContext(
 				$c->i18nCache, $c->settings['i18n.default'], $c->log
-			);
-		} );
-
-		$container->singleton( 'toolinfo', static function ( $c ) {
-			return new Toolinfo(
-				$c->settings['toolinfo.uri'], $c->cache, $c->log );
-		} );
-
-		$container->singleton( 'purifierConfig', static function ( $c ) {
-			$config = \HTMLPurifier_Config::createDefault();
-			$config->set( 'HTML.Doctype', 'HTML 4.01 Transitional' );
-			$config->set( 'URI.DisableExternalResources', true );
-			// Strip all css
-			$config->set( 'HTML.ForbiddenAttributes', [ '*@style' ] );
-			$config->set( 'CSS.AllowedProperties', [] );
-		} );
-
-		$container->singleton( 'purifier', static function ( $c ) {
-			return new \HTMLPurifier( $c->purifierConfig );
-		} );
-
-		$container->singleton( 'labsDao', static function ( $c ) {
-			return new LabsDao(
-				$c->settings['db.dsn'],
-				$c->settings['db.user'], $c->settings['db.pass'],
-				$c->cache,
-				$c->toolinfo,
-				$c->log
 			);
 		} );
 	}
@@ -150,8 +97,6 @@ class App extends AbstractApp {
 		$view->parserExtensions = [
 			new \Slim\Views\TwigExtension(),
 			new \Wikimedia\SimpleI18n\TwigExtension( $this->slim->i18nContext ),
-			new HumanFilters(),
-			new HtmlPurifierExtension( $this->slim->container ),
 			new \Twig_Extension_Debug(),
 		];
 
@@ -247,18 +192,10 @@ class App extends AbstractApp {
 				} )->name( 'favicon' );
 
 				$slim->get( 'tools', static function () use ( $slim ) {
-					$page = new Pages\Tools( $slim );
-					$page->setI18nContext( $slim->i18nContext );
-					$page->setLabsDao( $slim->labsDao );
-					$page();
+					$page = new Pages\Redirect( $slim );
+					$page->setBaseUrl( 'https://toolhub.wikimedia.org' );
+					$page( '/' );
 				} )->name( 'tools' );
-
-				$slim->get( 'tools/search.js', static function () use ( $slim ) {
-					$page = new Pages\ToolsJavascript( $slim );
-					$page->setI18nContext( $slim->i18nContext );
-					$page->setLabsDao( $slim->labsDao );
-					$page();
-				} )->name( 'toolsjs' );
 
 				$slim->get( 'tool/:name', static function ( $name ) use ( $slim ) {
 					$page = new Pages\Redirect( $slim );

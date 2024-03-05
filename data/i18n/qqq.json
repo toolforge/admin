@@ -25,8 +25,5 @@
 	"site-title": "Site wide page title",
 	"tool-labs": "Site heading",
 	"tool-labs-desc": "Site description",
-	"tool-title": "Tool details page title. Parameters:\n* $1 - tool name",
-	"tools-header": "List of tools page heading",
-	"tools-title": "List of tools page title",
 	"zzzzz": "unused message stuck at the bottom of the file.\n{{Identical|zzzzz}}"
 }

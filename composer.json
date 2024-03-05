@@ -5,9 +5,6 @@
 	"homepage": "https://toolforge.org/",
 	"require": {
 		"php": "^8.2",
-		"ext-redis": ">=2.0",
-		"ezyang/htmlpurifier": "~4.7",
-		"guzzlehttp/guzzle": "~6.0",
 		"wikimedia/slimapp": "dev-master"
 	},
 	"autoload": {

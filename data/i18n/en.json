@@ -23,8 +23,5 @@
 	"site-title": "Wikimedia Toolforge",
 	"tool-labs": "Wikimedia Toolforge",
 	"tool-labs-desc": "This is the web server for the Toolforge project, the home of community-maintained external tools supporting Wikimedia projects and their users.",
-	"tool-title": "Tool information: $1",
-	"tools-header": "Hosted tools",
-	"tools-title": "Hosted tools",
 	"zzzzz": "zzzzz"
 }
