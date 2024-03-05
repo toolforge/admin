@@ -193,8 +193,8 @@ class App extends AbstractApp {
 
 				$slim->get( 'tools', static function () use ( $slim ) {
 					$page = new Pages\Redirect( $slim );
-					$page->setBaseUrl( 'https://toolhub.wikimedia.org' );
-					$page( '/' );
+					$page->setBaseUrl( 'https://toolhub.wikimedia.org/' );
+					$page( '' );
 				} )->name( 'tools' );
 
 				$slim->get( 'tool/:name', static function ( $name ) use ( $slim ) {
@@ -205,8 +205,8 @@ class App extends AbstractApp {
 
 				$slim->get( 'oge/status', static function () use ( $slim ) {
 					$page = new Pages\Redirect( $slim );
-					$page->setBaseUrl( 'https://sge-jobs.toolforge.org' );
-					$page( '/' );
+					$page->setBaseUrl( 'https://sge-jobs.toolforge.org/' );
+					$page( '' );
 				} )->name( 'oge-status' );
 
 				$slim->get( 'healthz', static function () use ( $slim ) {
