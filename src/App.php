@@ -146,9 +146,6 @@ class App extends AbstractApp {
 				if ( $parts[0] === 'list' ) {
 					$path .= 'tools';
 
-				} elseif ( $parts[0] === 'status' ) {
-					$path .= 'oge/status';
-
 				} elseif ( in_array( $parts[0], [ '403', '404', '500', '503' ] ) ) {
 					$path .= "error/{$parts[0]}";
 
@@ -202,12 +199,6 @@ class App extends AbstractApp {
 					$page->setBaseUrl( 'https://toolsadmin.wikimedia.org/tools/id/' );
 					$page( $name );
 				} )->name( 'tool' );
-
-				$slim->get( 'oge/status', static function () use ( $slim ) {
-					$page = new Pages\Redirect( $slim );
-					$page->setBaseUrl( 'https://sge-jobs.toolforge.org/' );
-					$page( '' );
-				} )->name( 'oge-status' );
 
 				$slim->get( 'healthz', static function () use ( $slim ) {
 					$page = new Pages\Healthz();
